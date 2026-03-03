@@ -1,6 +1,8 @@
 package com.example.workflowautomation.engine;
 
 
+import com.example.workflowautomation.entity.ExecutionLog;
+import com.example.workflowautomation.repository.ExecutionLogRepository;
 import com.example.workflowautomation.entity.WorkflowNode;
 import com.example.workflowautomation.entity.Workflow;
 import com.example.workflowautomation.repository.WorkflowRepository;
@@ -18,6 +20,8 @@ public class WorkflowEngine {
 
     private final WorkflowRepository workflowRepository;
     private final WorkflowNodeRepository workflowNodeRepository;
+    private final ExecutionLogRepository executionLogRepository;
+    private final ExecutorFactory executorFactory;
 
 
     public String runWorkflow(Long workflowId, String input) {
@@ -25,35 +29,50 @@ public class WorkflowEngine {
         Workflow workflow = workflowRepository.findById(workflowId)
                 .orElseThrow(() -> new RuntimeException("Workflow not found"));
 
-        List<WorkflowNode> nodes =
-                workflowNodeRepository.findByWorkflowOrderBySequenceOrderAsc(workflow);
-
         String currentData = input;
 
-        for(WorkflowNode node : nodes) {
+        try {
 
-            switch (node.getNodeType()) {
+            List<WorkflowNode> nodes =
+                    workflowNodeRepository.findByWorkflowOrderBySequenceOrderAsc(workflow);
 
-                case "INPUT":
-                    // Do nothing, just pass input
-                    break;
 
-                case "AI":
-                    // For now simulate AI
-                    currentData = "[AI PROCESSED]: " + currentData;
-                    break;
+            for (WorkflowNode node : nodes) {
 
-                case "OUTPUT":
-                    // Final output formatting
-                    currentData = "[FINAL OUTPUT]: " + currentData;
-                    break;
+                NodeExecutor executor =
+                        executorFactory.getExecutor(node.getNodeType());
 
-                default:
-                    throw new RuntimeException("Unknown node type");
+                currentData = executor.execute(currentData);
             }
+
+            // SAVE SUCCESS LOG
+            ExecutionLog log = ExecutionLog.builder()
+                    .workflow(workflow)
+                    .inputData(input)
+                    .outputData(currentData)
+                    .status("SUCCESS")
+                    .executedAt(java.time.LocalDateTime.now())
+                    .build();
+
+            executionLogRepository.save(log);
+            return currentData;
+
+        } catch (Exception  e) {
+
+            // SAVE FAILURE LOG
+            ExecutionLog log = ExecutionLog.builder()
+                    .workflow(workflow)
+                    .inputData(input)
+                    .outputData(null)
+                    .status("FAILURE")
+                    .executedAt(java.time.LocalDateTime.now())
+                    .build();
+
+            executionLogRepository.save(log);
+
+            throw e;
         }
 
-        return currentData;
     }
 
 }
