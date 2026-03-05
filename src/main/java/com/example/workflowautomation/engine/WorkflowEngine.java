@@ -42,7 +42,7 @@ public class WorkflowEngine {
                 NodeExecutor executor =
                         executorFactory.getExecutor(node.getNodeType());
 
-                currentData = executor.execute(currentData);
+                currentData = executor.execute(currentData, node);
             }
 
             // SAVE SUCCESS LOG

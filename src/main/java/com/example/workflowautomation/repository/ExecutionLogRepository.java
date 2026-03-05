@@ -13,4 +13,7 @@ public interface ExecutionLogRepository extends JpaRepository<ExecutionLog, Long
     // Get execution logs history for a workflow
     List<ExecutionLog> findByWorkflow(Workflow workflow);
 
+    List<ExecutionLog> findByWorkflowIdOrderByExecutedAtDesc(Long workflowId);
+
+
 }

@@ -1,6 +1,7 @@
 package com.example.workflowautomation.engine;
 
 
+import com.example.workflowautomation.entity.WorkflowNode;
 import org.springframework.stereotype.Component;
 
 
@@ -8,7 +9,7 @@ import org.springframework.stereotype.Component;
 public class OutputNodeExecutor implements NodeExecutor{
 
     @Override
-    public String execute(String input) {
+    public String execute(String input, WorkflowNode node) {
         return "[FINAL OUTPUT]: " + input;
     }
 }

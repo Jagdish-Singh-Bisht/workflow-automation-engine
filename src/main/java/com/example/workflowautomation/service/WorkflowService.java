@@ -1,9 +1,11 @@
 package com.example.workflowautomation.service;
 
 
+import com.example.workflowautomation.entity.ExecutionLog;
 import com.example.workflowautomation.entity.WorkflowNode;
 import com.example.workflowautomation.entity.User;
 import com.example.workflowautomation.entity.Workflow;
+import com.example.workflowautomation.repository.ExecutionLogRepository;
 import com.example.workflowautomation.repository.UserRepository;
 import com.example.workflowautomation.repository.WorkflowNodeRepository;
 import com.example.workflowautomation.repository.WorkflowRepository;
@@ -24,6 +26,7 @@ public class WorkflowService {
     private final WorkflowRepository workflowRepository;
     private final WorkflowNodeRepository workflowNodeRepository;
     private final UserRepository userRepository;
+    private final ExecutionLogRepository executionLogRepository;
 
 
 
@@ -75,6 +78,9 @@ public class WorkflowService {
 
 
 
+    public List<ExecutionLog> getExecutionHistory(Long workflowId) {
+        return executionLogRepository.findByWorkflowIdOrderByExecutedAtDesc(workflowId);
+    }
 
 
 }

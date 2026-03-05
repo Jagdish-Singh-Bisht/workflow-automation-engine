@@ -1,17 +1,16 @@
 package com.example.workflowautomation.controller;
 
+import com.example.workflowautomation.entity.ExecutionLog;
 import com.example.workflowautomation.entity.WorkflowNode;
 import com.example.workflowautomation.entity.Workflow;
 import com.example.workflowautomation.engine.WorkflowEngine;
 import com.example.workflowautomation.service.WorkflowService;
 
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import lombok.RequiredArgsConstructor;
+
+import java.util.List;
 
 
 @RestController
@@ -55,5 +54,10 @@ public class WorkflowController {
     }
 
 
+
+    @GetMapping("/{workflowId}/executions")
+    public List<ExecutionLog> getExecutionHistory(@PathVariable Long workflowId) {
+        return workflowService.getExecutionHistory(workflowId);
+    }
 
 }
