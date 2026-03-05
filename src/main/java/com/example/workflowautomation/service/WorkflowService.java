@@ -1,6 +1,7 @@
 package com.example.workflowautomation.service;
 
 
+import com.example.workflowautomation.dto.ExecutionLogResponse;
 import com.example.workflowautomation.entity.ExecutionLog;
 import com.example.workflowautomation.entity.WorkflowNode;
 import com.example.workflowautomation.entity.User;
@@ -78,8 +79,21 @@ public class WorkflowService {
 
 
 
-    public List<ExecutionLog> getExecutionHistory(Long workflowId) {
-        return executionLogRepository.findByWorkflowIdOrderByExecutedAtDesc(workflowId);
+    public List<ExecutionLogResponse> getExecutionHistory(Long workflowId) {
+
+        List<ExecutionLog> logs =
+                executionLogRepository.findByWorkflowIdOrderByExecutedAtDesc(workflowId);
+
+        return logs.stream()
+                .map(log -> new ExecutionLogResponse(
+                        log.getId(),
+                        log.getInputData(),
+                        log.getOutputData(),
+                        log.getStatus(),
+                        log.getExecutedAt()
+                ))
+                .toList();
+
     }
 
 
