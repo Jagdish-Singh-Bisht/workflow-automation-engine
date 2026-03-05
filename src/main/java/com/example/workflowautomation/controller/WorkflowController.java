@@ -1,6 +1,7 @@
 package com.example.workflowautomation.controller;
 
 import com.example.workflowautomation.dto.ExecutionLogResponse;
+import com.example.workflowautomation.dto.NodeExecutionLogResponse;
 import com.example.workflowautomation.entity.WorkflowNode;
 import com.example.workflowautomation.entity.Workflow;
 import com.example.workflowautomation.engine.WorkflowEngine;
@@ -59,5 +60,12 @@ public class WorkflowController {
     public List<ExecutionLogResponse> getExecutionHistory(@PathVariable Long workflowId) {
         return workflowService.getExecutionHistory(workflowId);
     }
+
+
+    @GetMapping("/{workflowId}/node/executions")
+    public List<NodeExecutionLogResponse> getNodeExecutionHistory(@PathVariable Long workflowId) {
+        return workflowService.getNodeExecutionHistory(workflowId);
+    }
+
 
 }

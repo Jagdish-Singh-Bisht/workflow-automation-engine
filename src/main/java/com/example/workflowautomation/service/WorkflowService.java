@@ -2,14 +2,9 @@ package com.example.workflowautomation.service;
 
 
 import com.example.workflowautomation.dto.ExecutionLogResponse;
-import com.example.workflowautomation.entity.ExecutionLog;
-import com.example.workflowautomation.entity.WorkflowNode;
-import com.example.workflowautomation.entity.User;
-import com.example.workflowautomation.entity.Workflow;
-import com.example.workflowautomation.repository.ExecutionLogRepository;
-import com.example.workflowautomation.repository.UserRepository;
-import com.example.workflowautomation.repository.WorkflowNodeRepository;
-import com.example.workflowautomation.repository.WorkflowRepository;
+import com.example.workflowautomation.dto.NodeExecutionLogResponse;
+import com.example.workflowautomation.entity.*;
+import com.example.workflowautomation.repository.*;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,6 +23,8 @@ public class WorkflowService {
     private final WorkflowNodeRepository workflowNodeRepository;
     private final UserRepository userRepository;
     private final ExecutionLogRepository executionLogRepository;
+
+    private final NodeExecutionLogRepository nodeExecutionLogRepository;
 
 
 
@@ -89,6 +86,23 @@ public class WorkflowService {
                         log.getId(),
                         log.getInputData(),
                         log.getOutputData(),
+                        log.getStatus(),
+                        log.getExecutedAt()
+                ))
+                .toList();
+
+    }
+
+
+
+    public List<NodeExecutionLogResponse> getNodeExecutionHistory(Long workflowId) {
+
+        List<NodeExecutionLog> logs =
+                nodeExecutionLogRepository.findByWorkflowIdOrderByExecutedAtDesc(workflowId);
+
+        return logs.stream()
+                .map(log -> new NodeExecutionLogResponse(
+                        log.getNodeType(),
                         log.getStatus(),
                         log.getExecutedAt()
                 ))

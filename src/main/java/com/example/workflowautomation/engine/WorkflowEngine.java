@@ -2,9 +2,11 @@ package com.example.workflowautomation.engine;
 
 
 import com.example.workflowautomation.entity.ExecutionLog;
+import com.example.workflowautomation.entity.NodeExecutionLog;
 import com.example.workflowautomation.repository.ExecutionLogRepository;
 import com.example.workflowautomation.entity.WorkflowNode;
 import com.example.workflowautomation.entity.Workflow;
+import com.example.workflowautomation.repository.NodeExecutionLogRepository;
 import com.example.workflowautomation.repository.WorkflowRepository;
 import com.example.workflowautomation.repository.WorkflowNodeRepository;
 
@@ -22,6 +24,8 @@ public class WorkflowEngine {
     private final WorkflowNodeRepository workflowNodeRepository;
     private final ExecutionLogRepository executionLogRepository;
     private final ExecutorFactory executorFactory;
+    private final NodeExecutionLogRepository nodeExecutionLogRepository;
+
 
 
     public String runWorkflow(Long workflowId, String input) {
@@ -43,6 +47,16 @@ public class WorkflowEngine {
                         executorFactory.getExecutor(node.getNodeType());
 
                 currentData = executor.execute(currentData, node);
+
+                NodeExecutionLog log = NodeExecutionLog.builder()
+                        .workflow(workflow)
+                        .nodeType(node.getNodeType())
+                        .status("SUCCESS")
+                        .executedAt(java.time.LocalDateTime.now())
+                        .build();
+
+                nodeExecutionLogRepository.save(log);
+
             }
 
             // SAVE SUCCESS LOG
