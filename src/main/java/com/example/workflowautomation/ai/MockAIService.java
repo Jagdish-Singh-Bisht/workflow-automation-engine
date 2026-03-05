@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 
 
 
-@Service
+//@Service
 public class MockAIService implements AIService {
 
     @Override
