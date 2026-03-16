@@ -8,12 +8,12 @@ import com.example.workflowautomation.engine.WorkflowEngine;
 
 import org.springframework.stereotype.Service;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.scheduling.support.CronExpression;
 
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
-
-
+import java.time.LocalDateTime;
 
 
 
@@ -31,11 +31,24 @@ public class TriggerSchedulerService {
         List<WorkflowTrigger> triggers =
                 workflowTriggerRepository.findByTriggerType("CRON");
 
-        for(WorkflowTrigger trigger : triggers) {
-            Long workflowId = trigger.getWorkflowId();
-            System.out.println("Running scheduled workflow: " + workflowId);
+        LocalDateTime now = LocalDateTime.now();
 
-            workflowEngine.runWorkflow(workflowId, "Triggered execution");
+        for(WorkflowTrigger trigger : triggers) {
+
+            String cronExpression = trigger.getCronExpression();
+            CronExpression cron = CronExpression.parse(cronExpression);
+
+            LocalDateTime nextExecution = cron.next(now.minusMinutes(1));
+
+            if(nextExecution != null &&
+            nextExecution.getMinute() == now.getMinute() &&
+            nextExecution.getHour() == now.getHour()) {
+
+                Long workflowId = trigger.getWorkflowId();
+                System.out.println("Running workflow by CRON: " + workflowId);
+
+                workflowEngine.runWorkflow(workflowId, "Scheduled execution");
+            }
         }
     }
 }
