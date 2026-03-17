@@ -29,7 +29,7 @@ public class TriggerSchedulerService {
     public void checkTriggers() {
 
         List<WorkflowTrigger> triggers =
-                workflowTriggerRepository.findByTriggerType("CRON");
+                workflowTriggerRepository.findByTriggerTypeAndIsActive("CRON", true);
 
         LocalDateTime now = LocalDateTime.now();
 

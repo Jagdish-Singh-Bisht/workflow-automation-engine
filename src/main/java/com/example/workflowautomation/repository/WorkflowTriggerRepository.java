@@ -10,6 +10,6 @@ import java.util.List;
 
 public interface WorkflowTriggerRepository extends JpaRepository<WorkflowTrigger, Long> {
 
-    List<WorkflowTrigger> findByTriggerType(String triggerType);
+    List<WorkflowTrigger> findByTriggerTypeAndIsActive(String triggerType, boolean isActive);
 
 }

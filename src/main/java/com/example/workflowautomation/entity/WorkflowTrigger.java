@@ -6,6 +6,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Table;
+import jakarta.persistence.Column;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.NoArgsConstructor;
@@ -35,4 +37,6 @@ public class WorkflowTrigger {
 
     private String cronExpression;
 
+    @Column(name = "is_active")
+    private boolean isActive;
 }
