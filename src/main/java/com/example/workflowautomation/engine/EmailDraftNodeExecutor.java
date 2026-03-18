@@ -19,11 +19,13 @@ public class EmailDraftNodeExecutor implements NodeExecutor {
 
         EmailDraft draft = new EmailDraft(to, subject, input);
 
-        return "EMAIL DRAFT\n\n"
-                + "To: " + draft.getTo()
-                + "\nSubject: " + draft.getSubject()
-                + "\n\n"
-                + draft.getBody();
+//        return "EMAIL DRAFT\n\n"
+//                + "To: " + draft.getTo()
+//                + "\nSubject: " + draft.getSubject()
+//                + "\n\n"
+//                + draft.getBody();
+
+        return draft.getBody();
     }
 
 

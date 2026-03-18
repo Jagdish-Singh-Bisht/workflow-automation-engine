@@ -46,12 +46,17 @@ public class WorkflowEngine {
                 NodeExecutor executor =
                         executorFactory.getExecutor(node.getNodeType());
 
+                String inputBeforeNode = currentData;
+
                 currentData = executor.execute(currentData, node);
+
 
                 NodeExecutionLog log = NodeExecutionLog.builder()
                         .workflow(workflow)
                         .nodeType(node.getNodeType())
                         .status("SUCCESS")
+                        .inputData(inputBeforeNode)
+                        .outputData(currentData)
                         .executedAt(java.time.LocalDateTime.now())
                         .build();
 
