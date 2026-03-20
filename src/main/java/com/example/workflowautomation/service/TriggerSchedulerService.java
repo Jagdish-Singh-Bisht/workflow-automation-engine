@@ -2,6 +2,7 @@ package com.example.workflowautomation.service;
 
 
 
+import com.example.workflowautomation.dto.WorkflowRunRequest;
 import com.example.workflowautomation.entity.WorkflowTrigger;
 import com.example.workflowautomation.repository.WorkflowTriggerRepository;
 import com.example.workflowautomation.engine.WorkflowEngine;
@@ -47,7 +48,10 @@ public class TriggerSchedulerService {
                 Long workflowId = trigger.getWorkflowId();
                 System.out.println("Running workflow by CRON: " + workflowId);
 
-                workflowEngine.runWorkflow(workflowId, "Scheduled execution");
+                WorkflowRunRequest request = new WorkflowRunRequest();
+                request.setWorkflowId(workflowId);
+                request.setInput("Scheduled execution");
+                workflowEngine.runWorkflow(request);
             }
         }
     }

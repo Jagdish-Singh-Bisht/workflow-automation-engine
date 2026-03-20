@@ -21,10 +21,21 @@ public class EmailSendNodeExecutor implements NodeExecutor{
 
 
     @Override
-    public String execute(String input, WorkflowNode node) {
+    public String execute(String input, WorkflowNode node, Map<String, Object> context) {
 
-        String to = "jbisht526@gmail.com";
-        String subject = "Automated Notice";
+        String to = (String) context.get("email");
+        if (to == null) {
+            to = "jbisht526@gmail.com";
+        }
+
+        String taskName = (String) context.get("taskName");
+
+        if(taskName == null) {
+            taskName = "Task";
+        }
+
+        String subject = taskName + " - Notification";
+
 
         try{
 

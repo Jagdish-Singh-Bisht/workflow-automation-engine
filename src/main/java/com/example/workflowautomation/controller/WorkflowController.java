@@ -2,6 +2,7 @@ package com.example.workflowautomation.controller;
 
 import com.example.workflowautomation.dto.ExecutionLogResponse;
 import com.example.workflowautomation.dto.NodeExecutionLogResponse;
+import com.example.workflowautomation.dto.WorkflowRunRequest;
 import com.example.workflowautomation.entity.WorkflowNode;
 import com.example.workflowautomation.entity.Workflow;
 import com.example.workflowautomation.engine.WorkflowEngine;
@@ -33,7 +34,6 @@ public class WorkflowController {
     }
 
 
-
     // Add Node
     @PostMapping("/{workflowId}/nodes")
     public WorkflowNode addNode(
@@ -45,6 +45,7 @@ public class WorkflowController {
     }
 
 
+    /*
     // Run Workflow
     @PostMapping("/{workflowId}/run")
     public String runWorkflow(
@@ -54,6 +55,21 @@ public class WorkflowController {
         return workflowEngine.runWorkflow(workflowId, input);
     }
 
+
+     */
+
+
+    @PostMapping("/{workflowId}/run")
+    public String runWorkflow(
+            @PathVariable Long workflowId,
+            @RequestParam String input) {
+
+        WorkflowRunRequest request = new WorkflowRunRequest();
+        request.setWorkflowId(workflowId);
+        request.setInput(input);
+
+        return workflowEngine.runWorkflow(request);
+    }
 
 
     @GetMapping("/{workflowId}/executions")
@@ -68,4 +84,12 @@ public class WorkflowController {
     }
 
 
+    @PostMapping("/run")
+    public String runWorkflow(@RequestBody WorkflowRunRequest request) {
+
+        return workflowEngine.runWorkflow(request);
+    }
+
 }
+
+

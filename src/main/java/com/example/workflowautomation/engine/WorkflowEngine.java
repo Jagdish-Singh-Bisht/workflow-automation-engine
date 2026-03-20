@@ -1,19 +1,20 @@
 package com.example.workflowautomation.engine;
 
 
+import com.example.workflowautomation.dto.WorkflowRunRequest;
+import com.example.workflowautomation.entity.Task;
 import com.example.workflowautomation.entity.ExecutionLog;
 import com.example.workflowautomation.entity.NodeExecutionLog;
-import com.example.workflowautomation.repository.ExecutionLogRepository;
+import com.example.workflowautomation.repository.*;
 import com.example.workflowautomation.entity.WorkflowNode;
 import com.example.workflowautomation.entity.Workflow;
-import com.example.workflowautomation.repository.NodeExecutionLogRepository;
-import com.example.workflowautomation.repository.WorkflowRepository;
-import com.example.workflowautomation.repository.WorkflowNodeRepository;
 
 import org.springframework.stereotype.Component;
 import lombok.RequiredArgsConstructor;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @Component
@@ -25,15 +26,33 @@ public class WorkflowEngine {
     private final ExecutionLogRepository executionLogRepository;
     private final ExecutorFactory executorFactory;
     private final NodeExecutionLogRepository nodeExecutionLogRepository;
+    private final TaskRepository taskRepository;
 
 
+    public String runWorkflow(WorkflowRunRequest request) {
 
-    public String runWorkflow(Long workflowId, String input) {
+        String input = request.getInput();
 
-        Workflow workflow = workflowRepository.findById(workflowId)
+        Workflow workflow = workflowRepository.findById(request.getWorkflowId())
                 .orElseThrow(() -> new RuntimeException("Workflow not found"));
 
         String currentData = input;
+
+        Map<String, Object> context = new HashMap<>();
+        context.put("email", request.getEmail());
+
+//        Task task = taskRepository.findById(request.getTaskId())
+//                        .orElse(null);
+//
+//        if(task == null) {
+//            context.put("taskName", "Default Task");
+//            context.put("description", "No description");
+//            context.put("date", "N/A");
+//        }
+
+        context.put("taskName", request.getTaskName());
+        context.put("description", request.getDescription());
+        context.put("date", request.getDate());
 
         try {
 
@@ -48,7 +67,7 @@ public class WorkflowEngine {
 
                 String inputBeforeNode = currentData;
 
-                currentData = executor.execute(currentData, node);
+                currentData = executor.execute(currentData, node, context);
 
 
                 NodeExecutionLog log = NodeExecutionLog.builder()
