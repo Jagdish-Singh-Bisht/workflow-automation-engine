@@ -27,6 +27,7 @@ public class WorkflowEngine {
     private final ExecutorFactory executorFactory;
     private final NodeExecutionLogRepository nodeExecutionLogRepository;
     private final TaskRepository taskRepository;
+    private final TemplateRepository templateRepository;
 
 
     public String runWorkflow(WorkflowRunRequest request) {
@@ -41,18 +42,22 @@ public class WorkflowEngine {
         Map<String, Object> context = new HashMap<>();
         context.put("email", request.getEmail());
 
-//        Task task = taskRepository.findById(request.getTaskId())
-//                        .orElse(null);
-//
-//        if(task == null) {
-//            context.put("taskName", "Default Task");
-//            context.put("description", "No description");
-//            context.put("date", "N/A");
-//        }
+        Task task = taskRepository.findById(request.getTaskId())
+                        .orElse(null);
 
-        context.put("taskName", request.getTaskName());
-        context.put("description", request.getDescription());
-        context.put("date", request.getDate());
+        /*
+        if(task == null) {
+            context.put("taskName", "Default Task");
+            context.put("description", "No description");
+            context.put("date", "N/A");
+        }
+
+         */
+
+        context.put("taskName", task.getTaskName());
+        context.put("description", task.getDescription());
+        context.put("date", task.getTaskDate());
+        context.put("audience", task.getAudience());
 
         try {
 

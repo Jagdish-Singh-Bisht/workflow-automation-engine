@@ -50,8 +50,11 @@ public class TriggerSchedulerService {
 
                 WorkflowRunRequest request = new WorkflowRunRequest();
                 request.setWorkflowId(workflowId);
-                request.setInput("Scheduled execution");
+                request.setTaskId(1L);  // TEMP: fixed task
+                request.setEmail("jbisht526@gmail.com");
+
                 workflowEngine.runWorkflow(request);
+
             }
         }
     }

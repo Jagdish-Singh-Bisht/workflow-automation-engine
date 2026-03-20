@@ -27,6 +27,9 @@ public class Task {
 
     private LocalDate taskDate;
 
+    private String audience;
+
+
     public Long getId() {
         return id;
     }
@@ -58,4 +61,13 @@ public class Task {
     public void setTaskDate(LocalDate taskDate) {
         this.taskDate = taskDate;
     }
+
+    public String getAudience() {
+        return audience;
+    }
+
+    public void setAudience(String audience) {
+        this.audience = audience;
+    }
+
 }
