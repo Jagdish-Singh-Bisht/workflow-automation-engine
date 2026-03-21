@@ -2,6 +2,7 @@ package com.example.workflowautomation.engine;
 
 
 import com.example.workflowautomation.dto.WorkflowRunRequest;
+import com.example.workflowautomation.entity.Student;
 import com.example.workflowautomation.entity.Task;
 import com.example.workflowautomation.entity.ExecutionLog;
 import com.example.workflowautomation.entity.NodeExecutionLog;
@@ -28,6 +29,8 @@ public class WorkflowEngine {
     private final NodeExecutionLogRepository nodeExecutionLogRepository;
     private final TaskRepository taskRepository;
     private final TemplateRepository templateRepository;
+    private final StudentRepository studentRepository;
+
 
 
     public String runWorkflow(WorkflowRunRequest request) {
@@ -40,24 +43,51 @@ public class WorkflowEngine {
         String currentData = input;
 
         Map<String, Object> context = new HashMap<>();
-        context.put("email", request.getEmail());
+//        context.put("email", request.getEmail());
+        List<String> emails =  studentRepository.findAll()
+                .stream()
+                .map(Student::getEmail)
+                .toList();
+        context.put("emails", emails);
 
+
+        /*
         Task task = taskRepository.findById(request.getTaskId())
                         .orElse(null);
 
-        /*
-        if(task == null) {
-            context.put("taskName", "Default Task");
-            context.put("description", "No description");
-            context.put("date", "N/A");
-        }
 
-         */
+//        if(task == null) {
+//            context.put("taskName", "Default Task");
+//            context.put("description", "No description");
+//            context.put("date", "N/A");
+//        }
 
         context.put("taskName", task.getTaskName());
         context.put("description", task.getDescription());
         context.put("date", task.getTaskDate());
         context.put("audience", task.getAudience());
+
+        */
+
+
+        Task task = null;
+
+        if(request.getTaskId() != null) {
+            task = taskRepository.findById(request.getTaskId())
+                    .orElse(null);
+        }
+
+        if(task != null) {
+            context.put("taskName", task.getTaskName());
+            context.put("description", task.getDescription());
+            context.put("date", task.getTaskDate().toString());
+            context.put("audience", task.getAudience());
+        } else {
+            context.put("taskName", request.getTaskName());
+            context.put("description", request.getDescription());
+            context.put("date", request.getDate());
+            context.put("audience", request.getAudience());
+        }
 
         try {
 

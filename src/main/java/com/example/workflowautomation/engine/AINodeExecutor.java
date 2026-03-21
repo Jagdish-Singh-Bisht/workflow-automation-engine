@@ -44,6 +44,7 @@ public class AINodeExecutor implements NodeExecutor {
         Template template = templateRepository.findByName("EMAIL_TEMPLATE")
                 .orElseThrow(() -> new RuntimeException("Template not found"));
 
+        /*
         // 2. AI generates content (ONLY enhancements)
         String aiContent = aiService.generateResponse("""
         Rewrite the following into ONE clean professional sentence.
@@ -58,6 +59,14 @@ public class AINodeExecutor implements NodeExecutor {
         
         Text:
         """ + description);
+
+
+         */
+
+        // AI disabled (temporary) ----------------------------
+        String aiContent = description;
+        // ----------------------------------------------------
+
 
         if(aiContent.toLowerCase().contains("subject")) {
             aiContent = description;  // fallback

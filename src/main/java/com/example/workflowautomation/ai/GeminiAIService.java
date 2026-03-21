@@ -42,20 +42,46 @@ public class GeminiAIService implements AIService {
         HttpEntity<Map<String, Object>> entity =
                 new HttpEntity<>(request, headers);
 
+
+
         Map response = restTemplate.postForObject(url, entity, Map.class);
 
-//        return response.toString();
+        if(response == null) {
+            throw new RuntimeException("AI response is null");
+        }
+
 
         List candidates = (List) response.get("candidates");
 
+        if(candidates == null || candidates.isEmpty()) {
+            throw new RuntimeException("No candidates in AI response: " + response);
+        }
+
+
         Map firstCandidate = (Map) candidates.get(0);
+
         Map content = (Map) firstCandidate.get("content");
+
+        if(content == null) {
+            throw new RuntimeException("Content is null: " + response);
+        }
+
 
         List parts = (List) content.get("parts");
 
-        Map part = (Map) parts.get(0);
+        if(parts == null || parts.isEmpty()) {
+            throw new RuntimeException("Parts are null/empty: " + response);
+        }
 
-        return (String) part.get("text");
+
+        Map part = (Map) parts.get(0);
+        String text = (String) part.get("text");
+
+        if(text == null || text.isBlank()) {
+            throw new RuntimeException("AI returned empty text: " + response);
+        }
+
+        return text;
     }
 
 }

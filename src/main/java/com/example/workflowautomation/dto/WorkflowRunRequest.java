@@ -18,5 +18,7 @@ public class WorkflowRunRequest {
 
     private Long taskId;
 
+    private String audience;
+
     
 }
