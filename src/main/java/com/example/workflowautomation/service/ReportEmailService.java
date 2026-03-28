@@ -43,15 +43,19 @@ public class ReportEmailService {
                 LocalDateTime.now().minusHours(24);
 
         // 1) Fetch filtered data
-        List<Shipment> recent =
+        List<Shipment> fresh =
                 shipmentRepository.findByLastUpdatedAfter(last24Hours);
+
+//        List<Shipment> all = shipmentRepository.findAll();
 
         // 2) Generate text report
         String report = shipmentReportService.generateReport();
 
 
         // 3) Generate excel
-        byte[] excel = shipmentExcelService.generateExcel(recent);
+
+
+        byte[] excel = shipmentExcelService.generateExcel(fresh);
 
         List<String> emails = studentRepository.findAll()
                 .stream()

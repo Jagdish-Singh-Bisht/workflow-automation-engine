@@ -15,6 +15,9 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import java.io.FileInputStream;
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.Random;
+
+
 
 
 
@@ -36,6 +39,9 @@ public class ExcelService {
 
             boolean isHeader = true;
 
+            Random random = new Random();
+
+            int randomHours = random.nextInt(48);  // last 2 days
             for(Row row : sheet) {
                 if(isHeader) {
                     isHeader = false;
@@ -55,7 +61,7 @@ public class ExcelService {
                         .arrivalDate(row.getCell(9).getLocalDateTimeCellValue().toLocalDate())
                         .clientName(row.getCell(10).getStringCellValue())
                         .priority(row.getCell(11).getStringCellValue())
-                        .lastUpdated(LocalDateTime.now())
+                        .lastUpdated(LocalDateTime.now().minusHours(randomHours))
                         .build();
 
 //                shipmentRepository.save(shipment);
@@ -81,7 +87,7 @@ public class ExcelService {
 
                     existingShipment.setClientName(shipment.getClientName());
                     existingShipment.setPriority(shipment.getPriority());
-                    existingShipment.setLastUpdated(LocalDateTime.now());
+                    existingShipment.setLastUpdated(LocalDateTime.now().minusHours(randomHours));
 
                     shipmentRepository.save(existingShipment);
 

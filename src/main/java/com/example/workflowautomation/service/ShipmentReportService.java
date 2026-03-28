@@ -23,7 +23,7 @@ public class ShipmentReportService {
 
         // Last 24hrs data
         LocalDateTime now = LocalDateTime.now();
-        LocalDateTime last24Hours = now.minusHours(24);
+        LocalDateTime last24Hours = now.minusHours(1);
 
         List<Shipment> recent =
                 shipmentRepository.findByLastUpdatedAfter(last24Hours);

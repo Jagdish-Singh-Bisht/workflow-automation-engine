@@ -16,6 +16,8 @@ import lombok.Builder;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import org.hibernate.annotations.CreationTimestamp;
+
 
 
 
@@ -46,7 +48,8 @@ public class Shipment {
     private String clientName;
     private String priority;
 
-    @Column(name = "last_updated")
+    @Column(name = "last_updated", updatable = false)
+    @CreationTimestamp
     private LocalDateTime lastUpdated;
 
 }
