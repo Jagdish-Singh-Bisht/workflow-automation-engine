@@ -25,6 +25,35 @@ public class AINodeExecutor implements NodeExecutor {
     @Override
     public String execute(String input, WorkflowNode node, Map<String, Object> context) {
 
+        // Handle Dynamic Data
+        if(context.containsKey("data")) {
+            Object dataObj = context.get("data");
+
+            // Example: shipment list
+            if(dataObj instanceof java.util.List<?>) {
+                java.util.List<?> list = (java.util.List<?>) dataObj;
+
+                if(list.isEmpty()) {
+                    return "No data available. ";
+                }
+
+                // Simple summary
+                StringBuilder result = new StringBuilder();
+
+                result.append("Total records: ").append(list.size()).append("\n\n");
+
+                for(Object obj : list) {
+                    result.append(obj.toString()).append("\n");
+                }
+
+                return result.toString();
+
+            }
+        }
+
+
+
+
         String taskName = (String) context.get("taskName");
         String description = (String) context.get("description");
 

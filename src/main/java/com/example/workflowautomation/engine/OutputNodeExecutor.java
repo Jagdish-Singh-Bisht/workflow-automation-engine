@@ -13,6 +13,9 @@ public class OutputNodeExecutor implements NodeExecutor{
 
     @Override
     public String execute(String input, WorkflowNode node, Map<String, Object> context) {
+        System.out.println("📤 FINAL OUTPUT: " + input);
         return "[FINAL OUTPUT]: " + input;
     }
+
+
 }
