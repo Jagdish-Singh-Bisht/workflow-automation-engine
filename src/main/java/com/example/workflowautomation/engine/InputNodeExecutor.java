@@ -38,6 +38,7 @@ public class InputNodeExecutor implements NodeExecutor {
                     var shipments = shipmentRepository.findByLastUpdatedAfter(last12Hours);
 
                     context.put("data", shipments);
+                    context.put("dataType", "shipment");
 
                     return "Fetched " + shipments.size() + " shipments";
                 }

@@ -1,6 +1,9 @@
 package com.example.workflowautomation.engine;
 
 
+
+import com.example.workflowautomation.processor.ShipmentProcessor;
+import com.example.workflowautomation.entity.Shipment;
 import com.example.workflowautomation.ai.AIService;
 import com.example.workflowautomation.entity.Template;
 import com.example.workflowautomation.entity.WorkflowNode;
@@ -11,6 +14,9 @@ import org.springframework.stereotype.Component;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Map;
+import java.util.List;
+
+
 
 
 @Component("AI")
@@ -25,29 +31,17 @@ public class AINodeExecutor implements NodeExecutor {
     @Override
     public String execute(String input, WorkflowNode node, Map<String, Object> context) {
 
-        // Handle Dynamic Data
-        if(context.containsKey("data")) {
-            Object dataObj = context.get("data");
+        if(context.containsKey("data") && context.containsKey("dataType")) {
+            String type = (String) context.get("dataType");
 
-            // Example: shipment list
-            if(dataObj instanceof java.util.List<?>) {
-                java.util.List<?> list = (java.util.List<?>) dataObj;
+            if("shipment". equalsIgnoreCase(type)) {
+                Object dataObj = context.get("data");
 
-                if(list.isEmpty()) {
-                    return "No data available. ";
+                if(dataObj instanceof List<?>) {
+                    List<Shipment> shipments = (List<Shipment>) dataObj;
+
+                    return ShipmentProcessor.generateSummary(shipments);
                 }
-
-                // Simple summary
-                StringBuilder result = new StringBuilder();
-
-                result.append("Total records: ").append(list.size()).append("\n\n");
-
-                for(Object obj : list) {
-                    result.append(obj.toString()).append("\n");
-                }
-
-                return result.toString();
-
             }
         }
 
