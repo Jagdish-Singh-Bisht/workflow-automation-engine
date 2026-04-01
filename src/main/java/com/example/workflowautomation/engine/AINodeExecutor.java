@@ -34,6 +34,12 @@ public class AINodeExecutor implements NodeExecutor {
         if(context.containsKey("data") && context.containsKey("dataType")) {
             String type = (String) context.get("dataType");
 
+            if("email".equalsIgnoreCase(type)) {
+                Object data = context.get("data");
+
+                return (data != null) ? data.toString() : "No email data";
+            }
+
             if("shipment". equalsIgnoreCase(type)) {
                 Object dataObj = context.get("data");
 

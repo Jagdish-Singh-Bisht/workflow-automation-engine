@@ -1,6 +1,7 @@
 package com.example.workflowautomation.engine;
 
 
+import com.example.workflowautomation.source.SourceHandler;
 import com.example.workflowautomation.entity.WorkflowNode;
 import com.example.workflowautomation.repository.ShipmentRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -17,6 +18,7 @@ import java.util.Map;
 public class InputNodeExecutor implements NodeExecutor {
 
     private final ShipmentRepository shipmentRepository;
+    private final Map<String, SourceHandler> sourceHandler;
     private final ObjectMapper objectMapper;
 
     @Override
@@ -31,19 +33,24 @@ public class InputNodeExecutor implements NodeExecutor {
                 String type = (String) config.get("type");
 
                 // Controlled extension (NOT generic yet)
-                if("DB_FETCH_SHIPMENT".equalsIgnoreCase(type)) {
+//                if("DB_FETCH_SHIPMENT".equalsIgnoreCase(type)) {
+//
+//                    var last12Hours = java.time.LocalDateTime.now().minusHours(12);
+//
+//                    var shipments = shipmentRepository.findByLastUpdatedAfter(last12Hours);
+//
+//                    context.put("data", shipments);
+//                    context.put("dataType", "shipment");
+//
+//                    return "Fetched " + shipments.size() + " shipments";
 
-                    var last12Hours = java.time.LocalDateTime.now().minusHours(12);
+                // Dynamic handler selection
+                SourceHandler handler = sourceHandler.get(type);
 
-                    var shipments = shipmentRepository.findByLastUpdatedAfter(last12Hours);
-
-                    context.put("data", shipments);
-                    context.put("dataType", "shipment");
-
-                    return "Fetched " + shipments.size() + " shipments";
+                if(handler != null) {
+                    handler.fetch(context);
+                    return "Data fetched using: " + type;
                 }
-
-
             }
         } catch (Exception e) {
             e.printStackTrace();
