@@ -1,6 +1,9 @@
 package com.example.workflowautomation.source;
 
 
+import com.example.workflowautomation.entity.ProcessedEmail;
+import com.example.workflowautomation.repository.ProcessedEmailRepository;
+
 import jakarta.mail.Session;
 import jakarta.mail.Store;
 import jakarta.mail.Folder;
@@ -21,6 +24,13 @@ import java.util.Properties;
 
 @Component("EMAIL")
 public class EmailSourceHandler implements SourceHandler {
+
+    private final ProcessedEmailRepository processedEmailRepository;
+
+    public EmailSourceHandler(ProcessedEmailRepository processedEmailRepository) {
+        this.processedEmailRepository = processedEmailRepository;
+    }
+
 
     @Value("${mail.imap.host}")
     private String host;
@@ -60,6 +70,23 @@ public class EmailSourceHandler implements SourceHandler {
             // Get latest email
             for(int i = messages.length - 1; i >= 0; i--) {
                 Message message = messages[i];
+
+                // Get unique message ID (using header)
+                String[] headers = message.getHeader("Message-ID");
+                // String messageId = (headers != null && headers.length > 0) ? headers[0] : null;
+
+                String messageId = null;
+                if(headers != null) {
+                    if(headers.length > 0) {
+                        messageId = headers[0];
+                    }
+                }
+
+                // Skip if already processed
+                if(messageId != null && processedEmailRepository.existsByMessageId(messageId)) {
+                    continue;
+                }
+
                 String subject = message.getSubject();
 
                 if(subject != null) {
@@ -78,6 +105,14 @@ public class EmailSourceHandler implements SourceHandler {
                         context.put("dataType", "email");
 
                         System.out.println("Important email found: " + subject);
+
+                        // Save as processed
+                        if(messageId != null) {
+                            processedEmailRepository.save(
+                                    new ProcessedEmail(null, messageId, null)
+                            );
+                        }
+
 
                         inbox.close(false);
                         store.close();
