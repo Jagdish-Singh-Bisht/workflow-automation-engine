@@ -25,6 +25,13 @@ public class OutputNodeExecutor implements NodeExecutor{
     @Override
     public String execute(String input, WorkflowNode node, Map<String, Object> context) {
 
+        Boolean emailEnabled = (Boolean)
+                context.get("emailEnabled");
+
+        Boolean whatsappEnabled = (Boolean)
+                context.get("whatsappEnabled");
+
+
         try {
             if(node.getConfigJson() != null) {
 
@@ -61,26 +68,46 @@ public class OutputNodeExecutor implements NodeExecutor{
                 // S3: Execute based on type
                 if("WHATSAPP".equalsIgnoreCase(finalType)) {
 
-                    whatsAppService.sendWhatsapp(output);
-                    return "Sent via WhatsApp";
+                    if(Boolean.TRUE.equals(whatsappEnabled)) {
+
+                        whatsAppService.sendWhatsapp(output);
+                        return "Sent via WhatsApp";
+
+                    } else if (Boolean.TRUE.equals(emailEnabled)) {
+
+                        // Fallback to email if WhatsApp is disabled
+                        String to = (String) config.getOrDefault("to", "jbisht526@gmail.com");
+                        String subject = "Automated Report";
+
+                        emailService.sendEmail(to, subject, output);
+
+                        System.out.println("Fallback -> Email sent to: " + to);
+                        return "Fallback -> Sent via Email";
+
+                    }
+
 
                 } else if ("EMAIL".equalsIgnoreCase(finalType)) {
-                    String to = (String) config.getOrDefault("to", "jbisht526@gmail.com");
-                    String subject = "Automated Report";
 
-                    emailService.sendEmail(to, subject, output);
+                    if(Boolean.TRUE.equals(emailEnabled)) {
 
-                    System.out.println("Email sent to: " + to);
-                    return "Sent via Email";
+                        String to = (String) config.getOrDefault("to", "jbisht526@gmail.com");
+                        String subject = "Automated Report";
 
+                        emailService.sendEmail(to, subject, output);
+                        System.out.println("Email sent to: " + to);
+
+                        return "Sent via Email";
+                    }
                 }
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         // fallback
-        System.out.println("📤 FINAL OUTPUT: " + input);
+        System.out.println("FINAL OUTPUT: " + input);
 
         return input;
     }
