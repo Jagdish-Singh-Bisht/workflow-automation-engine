@@ -20,5 +20,8 @@ public class WorkflowRunRequest {
 
     private String audience;
 
-    
+    private Boolean emailEnabled;
+    private Boolean whatsappEnabled;
+
+
 }

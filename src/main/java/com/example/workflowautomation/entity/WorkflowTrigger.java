@@ -39,4 +39,12 @@ public class WorkflowTrigger {
 
     @Column(name = "is_active")
     private boolean isActive;
+
+    @Column(name = "email_enabled")
+    private Boolean emailEnabled;
+
+    @Column(name = "whatsapp_enabled")
+    private Boolean whatsappEnabled;
+
+
 }

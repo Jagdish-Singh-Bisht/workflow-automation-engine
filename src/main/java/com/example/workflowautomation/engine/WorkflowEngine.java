@@ -50,6 +50,9 @@ public class WorkflowEngine {
                 .toList();
         context.put("emails", emails);
 
+        context.put("emailEnabled", request.getEmailEnabled());
+        context.put("whatsappEnabled", request.getWhatsappEnabled());
+
 
         /*
         Task task = taskRepository.findById(request.getTaskId())
