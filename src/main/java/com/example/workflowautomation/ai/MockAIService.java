@@ -27,4 +27,10 @@ public class MockAIService implements AIService {
                 """.formatted(input, input);
 
     }
+
+    @Override
+    public String detectIntent(String input) {
+        return "UNKNOWN";
+    }
+
 }

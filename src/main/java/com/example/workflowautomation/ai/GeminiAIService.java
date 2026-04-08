@@ -15,6 +15,7 @@ import java.util.Map;
 @Service
 public class GeminiAIService implements AIService {
 
+
     @Value("${gemini.api.key}")
     private String apiKey;
 
@@ -82,6 +83,25 @@ public class GeminiAIService implements AIService {
         }
 
         return text;
+    }
+
+
+    @Override
+    public String detectIntent(String input) {
+
+        if(input == null) return "UNKNOWN";
+
+        String lower = input.toLowerCase();
+
+        if(lower.contains("schedule") || lower.contains("today") || lower.contains("events") || lower.contains("calendar")) {
+            return "GET_TODAY_SCHEDULE";
+        }
+
+        if(lower.contains("tomorrow") || lower.contains("next day") || lower.contains("upcoming")) {
+            return "GET_TOMORROW_SCHEDULE";
+        }
+
+        return "UNKNOWN";
     }
 
 }
