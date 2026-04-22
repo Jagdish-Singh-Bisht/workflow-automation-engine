@@ -1,6 +1,5 @@
 package com.example.workflowautomation.service;
 
-
 import org.springframework.stereotype.Service;
 
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
@@ -20,19 +19,18 @@ import com.google.api.services.calendar.model.Event;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
+
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
+
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
-
-
-
-
 
 @Service
 public class CalendarService {
@@ -40,6 +38,7 @@ public class CalendarService {
     public String getTodayEvents() {
         try {
 
+            // 🔹 Setup Google API
             var httpTransport = GoogleNetHttpTransport.newTrustedTransport();
             var jsonFactory = JacksonFactory.getDefaultInstance();
 
@@ -68,7 +67,7 @@ public class CalendarService {
                     credential
             ).setApplicationName("Workflow").build();
 
-            // ✅ TODAY RANGE
+            // 🔹 Today time range
             var todayStart = java.time.LocalDate.now()
                     .atStartOfDay(ZoneId.systemDefault());
 
@@ -92,7 +91,6 @@ public class CalendarService {
             }
 
             StringBuilder res = new StringBuilder("Today's Schedule:\n\n");
-
             int count = 1;
 
             for (Event e : events.getItems()) {
@@ -103,6 +101,7 @@ public class CalendarService {
                 String lower = summary.toLowerCase();
                 if (lower.contains("birthday") || lower.contains("holiday")) continue;
 
+                // 🔹 Time handling
                 DateTime start = e.getStart().getDateTime();
                 DateTime end = e.getEnd().getDateTime();
 
@@ -118,64 +117,49 @@ public class CalendarService {
                 String startTime = formatter.format(startInstant);
                 String endTime = formatter.format(endInstant);
 
+                // 🔹 Links
                 String link = e.getHtmlLink();
                 String meetLink = e.getHangoutLink();
 
                 List<String> customLinks = new ArrayList<>();
 
                 String description = e.getDescription();
-                System.out.println("Event description: " + description);
 
                 if (description != null) {
-
                     Pattern pattern = Pattern.compile("https?://[^\\s]+");
                     Matcher matcher = pattern.matcher(description);
 
                     while (matcher.find()) {
                         customLinks.add(matcher.group());
                     }
-
-//                    Pattern pattern = Pattern.compile("(https?://\\S+)");
-//                    Matcher matcher = pattern.matcher(description);
-//
-//                    while(matcher.find()) {
-//                        customLinks.add(matcher.group(1));
-//                    }
                 }
 
-                /*
-                if(description != null && description.contains("http")) {
-                    int linkStart = description.indexOf("http");
-                    int linkEnd = description.indexOf(" ", linkStart);
-
-                    if(linkEnd == -1) linkEnd = description.length();
-
-                    customLink = description.substring(linkStart, linkEnd);
-                }
-
-                 */
-
+                // 🔹 Output formatting
                 res.append(count++).append(". ").append(summary).append("\n")
                         .append("   ⏰ ").append(startTime).append(" - ").append(endTime).append("\n");
 
-                if(!customLinks.isEmpty()) {
-                    for(String cl: customLinks) {
+                if (!customLinks.isEmpty()) {
+                    for (String cl : customLinks) {
                         res.append("   🔗 Link: ").append(cl).append("\n");
                     }
-                }
-                else if(meetLink != null) {
-                    res.append("   🎥 Meet: ").append(meetLink).append("\n");
-                }
-                else if(link != null) {
+                } else if (meetLink != null) {
+                    res.append("   🔗 Meet: ").append(meetLink).append("\n");
+                } else if (link != null) {
                     res.append("   🔗 Event: ").append(link).append("\n");
                 }
 
                 res.append("\n");
             }
 
+            // 🔹 If all events filtered out
+            if (count == 1) {
+                return "No valid events today";
+            }
+
             return res.toString();
 
         } catch (Exception e) {
+            e.printStackTrace();
             return "Error fetching calendar";
         }
     }
