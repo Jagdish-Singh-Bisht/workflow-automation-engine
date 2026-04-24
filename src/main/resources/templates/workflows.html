@@ -17,13 +17,20 @@
                 <tr>
                     <th>Name</th>
                     <th>Status</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
 
             <tbody>
-            <tr>
-                <td>Sample Workflow</td>
+            <tr th:each="wf : ${workflows}">
+                <td th:text="${wf.name}"></td>
                 <td>Active</td>
+
+                <td>
+                    <a th:href="@{'/workflows/' + ${wf.id} + '/nodes'}"
+                       class="btn btn-sm btn-warning">Manage</a>
+                </td>
+
             </tr>
             </tbody>
 
