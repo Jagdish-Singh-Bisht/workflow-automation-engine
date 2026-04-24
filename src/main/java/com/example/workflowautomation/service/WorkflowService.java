@@ -110,5 +110,9 @@ public class WorkflowService {
 
     }
 
+    public List<Workflow> getAllWorkflows() {
+        return workflowRepository.findAll();
+    }
+
 
 }
