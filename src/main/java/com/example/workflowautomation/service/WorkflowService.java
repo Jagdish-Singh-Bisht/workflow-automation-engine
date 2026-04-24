@@ -47,7 +47,10 @@ public class WorkflowService {
 
 
     // Add Node to Workflow
-    public WorkflowNode addNode(Long workflowId, String nodeType, Integer sequenceOrder) {
+    public WorkflowNode addNode(Long workflowId,
+                                String nodeType,
+                                Integer sequenceOrder,
+                                String configJson) {
 
         Workflow workflow = workflowRepository.findById(workflowId)
                 .orElseThrow(() -> new RuntimeException("Workflow not found"));
@@ -56,6 +59,7 @@ public class WorkflowService {
                 .workflow(workflow)
                 .nodeType(nodeType)
                 .sequenceOrder(sequenceOrder)
+                .configJson(configJson)
                 .build();
 
         return workflowNodeRepository.save(node);

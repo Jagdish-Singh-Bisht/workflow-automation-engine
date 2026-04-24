@@ -28,6 +28,11 @@
                 <input type="number" name="sequenceOrder" class="form-control" required>
             </div>
 
+            <div class="mb-3">
+                <label>Config (JSON)</label>
+                <textarea name="configJson" class="form-control" placeholder='{"type":"EMAIL"}'></textarea>
+            </div>
+
             <button type="submit" class="btn btn-success">Add Node</button>
         </form>
 
@@ -39,6 +44,7 @@
                 <tr>
                     <th>Type</th>
                     <th>Sequence Order</th>
+                    <th>Config</th>
                 </tr>
             </thead>
 
@@ -46,6 +52,7 @@
                 <tr th:each="node : ${nodes}">
                     <td th:text="${node.nodeType}"></td>
                     <td th:text="${node.sequenceOrder}"></td>
+                    <td th:text="${node.configJson}"></td>
                 </tr>
             </tbody>
         </table>

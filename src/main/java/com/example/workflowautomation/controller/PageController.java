@@ -91,6 +91,8 @@ public class PageController {
         return "layout";
     }
 
+
+    /*
     @PostMapping("/workflows/{id}/nodes")
     public String workflowNodes(@PathVariable Long id,
                                 @RequestParam String nodeType,
@@ -100,6 +102,25 @@ public class PageController {
 
         return "redirect:/workflows/" + id + "/nodes";
     }
+
+
+     */
+
+
+    
+    @PostMapping("/workflows/{id}/nodes")
+    public String addNode(@PathVariable Long id,
+                          @RequestParam String nodeType,
+                          @RequestParam Integer sequenceOrder,
+                          @RequestParam(required = false) String configJson) {
+
+        workflowService.addNode(id, nodeType, sequenceOrder, configJson);
+
+        return "redirect:/workflows/" + id + "/nodes";
+
+    }
+
+
 
 
 }

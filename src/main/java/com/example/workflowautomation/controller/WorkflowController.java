@@ -40,9 +40,10 @@ public class WorkflowController {
     public WorkflowNode addNode(
             @PathVariable Long workflowId,
             @RequestParam String nodeType,
-            @RequestParam int sequenceOrder) {
+            @RequestParam int sequenceOrder,
+            @RequestParam(required = false) String configJson) {
 
-        return workflowService.addNode(workflowId, nodeType, sequenceOrder);
+        return workflowService.addNode(workflowId, nodeType, sequenceOrder, configJson);
     }
 
 
