@@ -68,7 +68,7 @@ public class OutputNodeExecutor implements NodeExecutor{
                 // S3: Execute based on type
                 if("WHATSAPP".equalsIgnoreCase(finalType)) {
 
-                    if(Boolean.TRUE.equals(whatsappEnabled)) {
+                    if(whatsappEnabled == null || Boolean.TRUE.equals(whatsappEnabled)) {
 
                         whatsAppService.sendWhatsapp(output);
                         return "Sent via WhatsApp";
@@ -89,7 +89,7 @@ public class OutputNodeExecutor implements NodeExecutor{
 
                 } else if ("EMAIL".equalsIgnoreCase(finalType)) {
 
-                    if(Boolean.TRUE.equals(emailEnabled)) {
+                    if(emailEnabled == null || Boolean.TRUE.equals(emailEnabled)) {
 
                         String to = (String) config.getOrDefault("to", "jbisht526@gmail.com");
                         String subject = "Automated Report";

@@ -32,4 +32,6 @@ public class Student {
 
     private String email;
 
+    @Column(name = "is_active")
+    private Boolean active;
 }

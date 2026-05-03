@@ -57,7 +57,7 @@ public class ReportEmailService {
 
         byte[] excel = shipmentExcelService.generateExcel(fresh);
 
-        List<String> emails = studentRepository.findAll()
+        List<String> emails = studentRepository.findByActiveTrue()
                 .stream()
                 .map(s -> s.getEmail())
                 .toList();

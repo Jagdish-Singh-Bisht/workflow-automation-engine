@@ -44,7 +44,7 @@ public class WorkflowEngine {
 
         Map<String, Object> context = new HashMap<>();
 //        context.put("email", request.getEmail());
-        List<String> emails =  studentRepository.findAll()
+        List<String> emails =  studentRepository.findByActiveTrue()
                 .stream()
                 .map(Student::getEmail)
                 .toList();

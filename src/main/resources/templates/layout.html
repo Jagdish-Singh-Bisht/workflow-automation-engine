@@ -50,5 +50,30 @@
         </div>
 
     </div>
+
+
+    <script>
+        function runWorkflow(workflowId) {
+
+            console.log("Clicked Run for:", workflowId);
+
+            const input = prompt("Enter input for workflow:");
+
+            if (!input) return;
+
+            fetch('/api/workflows/' + workflowId + '/run?input=' + encodeURIComponent(input), {
+                method: 'POST'
+            })
+            .then(response => response.text())
+            .then(data => {
+                alert("Result:\n\n" + data);
+            })
+            .catch(error => {
+                console.error(error);
+                alert("Error running workflow");
+            });
+        }
+    </script>
+
 </body>
 </html>

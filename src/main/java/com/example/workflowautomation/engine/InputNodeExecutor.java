@@ -49,7 +49,8 @@ public class InputNodeExecutor implements NodeExecutor {
 
                 if(handler != null) {
                     handler.fetch(context);
-                    return "Data fetched using: " + type;
+                    // return "Data fetched using: " + type;
+                    return (String) context.get("data"); // pass fetched data as output
                 }
             }
         } catch (Exception e) {
