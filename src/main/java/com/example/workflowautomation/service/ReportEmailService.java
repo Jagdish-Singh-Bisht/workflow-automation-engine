@@ -63,23 +63,26 @@ public class ReportEmailService {
                 .toList();
 
 
-        // 4) Send email
-        String subject = "Daily Shipment Report";
+//        // 4) Send email
+//        String subject = "Daily Shipment Report";
+//
+//        for(String email : emails) {
+//            System.out.println("Sending report to: " + email);
+//
+////            emailService.sendEmail(email, subject, report);
+//
+////            emailService.sendEmailWithAttachment(
+////                    email,
+////                    subject,
+////                    report,
+////                    excel
+////            );
+//            return report;
+//        }
+//
+//        return "Report sent to all users!";
 
-        for(String email : emails) {
-            System.out.println("Sending report to: " + email);
-
-//            emailService.sendEmail(email, subject, report);
-
-            emailService.sendEmailWithAttachment(
-                    email,
-                    subject,
-                    report,
-                    excel
-            );
-        }
-
-        return "Report sent to all users!";
+        return report;
 
     }
 }

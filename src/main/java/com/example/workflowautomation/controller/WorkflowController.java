@@ -64,11 +64,9 @@ public class WorkflowController {
     @PostMapping("/{workflowId}/run")
     public String runWorkflow(
             @PathVariable Long workflowId,
-            @RequestParam String input) {
+            @RequestBody WorkflowRunRequest request) {
 
-        WorkflowRunRequest request = new WorkflowRunRequest();
         request.setWorkflowId(workflowId);
-        request.setInput(input);
 
         return workflowEngine.runWorkflow(request);
     }

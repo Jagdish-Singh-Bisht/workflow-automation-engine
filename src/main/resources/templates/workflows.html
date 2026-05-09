@@ -12,6 +12,13 @@
 
     <button class="btn btn-primary mb-3"> + Create Workflow</button>
 
+    <div style="margin-bottom: 15px;">
+        <input type="text" id="workflowInput"
+               placeholder="Enter input for workflow"
+               style="width: 300px; padding: 5px; border-radius: 5px;" />
+    </div>
+
+
     <table class="table table-bordered">
         <thead>
         <tr>
@@ -31,9 +38,22 @@
                 <a th:href="@{'/workflows/' + ${wf.id} + '/nodes'}"
                    class="btn btn-sm btn-warning">Manage</a>
 
+
+                <!-- Email toggle -->
+                <label style="margin-right:10px;">
+                    <input type="checkbox" class="email-toggle" checked>
+                    Email
+                </label>
+
+                <!-- WhatsApp toggle -->
+                <label style="margin-right:10px;">
+                    <input type="checkbox" class="wa-toggle">
+                    WhatsApp
+                </label>
+
                 <!-- Run Button -->
                 <button class="btn btn-sm btn-success"
-                        th:onclick="'runWorkflow(' + ${wf.id} + ')'">
+                        th:onclick="|runWorkflow(${wf.id}, this)|">
                     Run
                 </button>
             </td>
@@ -43,29 +63,75 @@
 
 </div>
 
+
+<!--<div id="resultModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgbs(0,0,0,0.5);">-->
+
+<!--    <div style="background:#1e1e2f; color:white; width:400px; margin:10% auto; padding:20px; border-radius:10px;">-->
+
+<!--        <h4>Result</h4>-->
+
+<!--        <pre id="resultText" style="white-space:pre-wrap;"></pre>-->
+
+<!--        <button onclick="closeModal()" style="margin-top:10px; padding:5px 10px;">OK</button>-->
+
+<!--    </div>-->
+<!--</div>-->
+
 <!-- 🔥 INLINE JS (WORKING VERSION) -->
-<script>
-    function runWorkflow(workflowId) {
+<!--<script>-->
+<!--    function showModal(message) {-->
+<!--        document.getElementById("resultText").innerText = message;-->
+<!--        document.getElementById("resultModal").style.display = "block";-->
+<!--    }-->
 
-        console.log("Clicked Run for:", workflowId);
+<!--    function closeModal() {-->
+<!--        document.getElementById("resultModal").style.display = "none";-->
+<!--    }-->
 
-        const input = prompt("Enter input for workflow:");
+<!--    function runWorkflow(workflowId, buttonElement) {-->
 
-        if (!input) return;
+<!--        console.log("Clicked Run for:", workflowId);-->
 
-        fetch('/api/workflows/' + workflowId + '/run?input=' + encodeURIComponent(input), {
-            method: 'POST'
-        })
-        .then(response => response.text())
-        .then(data => {
-            alert("Result:\\n\\n" + data);
-        })
-        .catch(error => {
-            console.error(error);
-            alert("Error running workflow");
-        });
-    }
-</script>
+<!--        const input = document.getElementById("workflowInput").value;-->
+
+<!--        if (!input || input.trim() === "") {-->
+<!--            showModal("Please enter input before running workflow.");-->
+<!--            return;-->
+<!--        }-->
+
+<!--        // 🧠 get current row-->
+<!--        const row = buttonElement.closest("tr");-->
+
+<!--        const emailEnabled = row.querySelector(".email-toggle").checked;-->
+<!--        const whatsappEnabled = row.querySelector(".wa-toggle").checked;-->
+
+<!--        console.log("Email:", emailEnabled, "WhatsApp:", whatsappEnabled);-->
+
+<!--        fetch('/api/workflows/' + workflowId + '/run', {-->
+<!--            method: 'POST',-->
+<!--            headers: {-->
+<!--                'Content-Type': 'application/json'-->
+<!--            },-->
+<!--            body: JSON.stringify({-->
+<!--                input: input,-->
+<!--                emailEnabled: emailEnabled,-->
+<!--                whatsappEnabled: whatsappEnabled-->
+<!--            })-->
+<!--        })-->
+<!--            .then(response => response.text())-->
+<!--            .then(data => {-->
+<!--                showModal(data);-->
+<!--            })-->
+<!--            .catch(error => {-->
+<!--                console.error(error);-->
+<!--                showModal("Error running workflow");-->
+<!--            });-->
+<!--    }-->
+
+
+
+
+<!--</script>-->
 
 </body>
 </html>

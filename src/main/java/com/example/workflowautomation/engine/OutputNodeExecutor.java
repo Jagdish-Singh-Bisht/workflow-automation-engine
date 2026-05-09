@@ -32,6 +32,22 @@ public class OutputNodeExecutor implements NodeExecutor{
                 context.get("whatsappEnabled");
 
 
+        // PRIORITY: USER SELECTION
+        if(Boolean.TRUE.equals(whatsappEnabled)) {
+            whatsAppService.sendWhatsapp(input);
+            return "Sent via WhatsApp";
+        }
+
+        if(Boolean.TRUE.equals(emailEnabled)) {
+            String to = "jbisht526@gmail.com";
+            String subject = "Automated Report";
+
+            emailService.sendEmail(to, subject, input);
+            return "Sent via Email";
+        }
+
+
+
         try {
             if(node.getConfigJson() != null) {
 
