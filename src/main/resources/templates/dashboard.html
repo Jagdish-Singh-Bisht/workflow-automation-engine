@@ -16,16 +16,32 @@
             <div class="col-md-3">
                 <div class="card p-3">
                     <h5>Total workflows</h5>
-                    <p>0</p>
+                    <p th:text="${totalWorkflows}"></p>
                 </div>
             </div>
 
             <div class="col-md-3">
                 <div class="card p-3">
                     <h5>Last Execution</h5>
-                    <p>--</p>
+                    <p th:text="${#temporals.format(lastExecutionTime, 'dd MMM yyyy HH:mm')}"></p>
                 </div>
             </div>
+
+            <div class="col-md-3">
+                <div class="card p-3">
+                    <h5>Active Triggers</h5>
+                    <p th:text="${activeTriggers}"></p>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card p-3">
+                    <h5>Total Executions</h5>
+                    <p th:text="${totalExecutions}"></p>
+                </div>
+            </div>
+
+
         </div>
     </div>
 

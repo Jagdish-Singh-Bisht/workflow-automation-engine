@@ -15,5 +15,6 @@ public interface ExecutionLogRepository extends JpaRepository<ExecutionLog, Long
 
     List<ExecutionLog> findByWorkflowIdOrderByExecutedAtDesc(Long workflowId);
 
+    ExecutionLog findTopByOrderByExecutedAtDesc();
 
 }

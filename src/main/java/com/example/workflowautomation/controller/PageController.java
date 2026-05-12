@@ -1,6 +1,9 @@
 package com.example.workflowautomation.controller;
 
 
+import com.example.workflowautomation.entity.ExecutionLog;
+import com.example.workflowautomation.repository.WorkflowRepository;
+import com.example.workflowautomation.repository.ExecutionLogRepository;
 import com.example.workflowautomation.service.WorkflowService;
 import com.example.workflowautomation.repository.WorkflowTriggerRepository;
 import com.example.workflowautomation.entity.WorkflowTrigger;
@@ -21,13 +24,20 @@ public class PageController {
 
     private final WorkflowService workflowService;
     private final WorkflowTriggerRepository workflowTriggerRepository;
+    private final WorkflowRepository workflowRepository;
+    private final ExecutionLogRepository executionLogRepository;
+
 
 
     public PageController(WorkflowService workflowService,
-                          WorkflowTriggerRepository workflowTriggerRepository) {
+                          WorkflowTriggerRepository workflowTriggerRepository,
+                          WorkflowRepository workflowRepository,
+                          ExecutionLogRepository executionLogRepository) {
 
         this.workflowService = workflowService;
         this.workflowTriggerRepository = workflowTriggerRepository;
+        this.workflowRepository = workflowRepository;
+        this.executionLogRepository = executionLogRepository;
     }
 
 
@@ -43,9 +53,29 @@ public class PageController {
 
     @GetMapping("/dashboard")
     public String dashboard(Model model) {
+
+        long totalWorkflows = workflowRepository.count();
+
+        long activeTriggers = workflowTriggerRepository.countByIsActive(true);
+
+        long totalExecutions = executionLogRepository.count();
+
+        ExecutionLog lastExecution = executionLogRepository.findTopByOrderByExecutedAtDesc();
+
         model.addAttribute("page", "dashboard");
+
+        model.addAttribute("totalWorkflows", totalWorkflows);
+        model.addAttribute("activeTriggers", activeTriggers);
+        model.addAttribute("totalExecutions", totalExecutions);
+
+        model.addAttribute(
+                "lastExecutionTime",
+                lastExecution != null ? lastExecution.getExecutedAt() : "--"
+        );
+
         return "layout";
     }
+
 
     @GetMapping("/workflows")
     public String workflows(Model model) {
@@ -123,7 +153,7 @@ public class PageController {
      */
 
 
-    
+
     @PostMapping("/workflows/{id}/nodes")
     public String addNode(@PathVariable Long id,
                           @RequestParam String nodeType,
@@ -163,6 +193,12 @@ public class PageController {
 
         return "redirect:/workflows/" + id + "/nodes";
     }
+
+
+
+
+
+
 
 
 

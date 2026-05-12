@@ -14,4 +14,6 @@ public interface WorkflowTriggerRepository extends JpaRepository<WorkflowTrigger
 
     Optional<WorkflowTrigger> findByWorkflowId(Long workflowId);
 
+    long countByIsActive(boolean isActive);
+
 }
