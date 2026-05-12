@@ -40,7 +40,28 @@ public class WorkflowService {
                 .createdAt(LocalDateTime.now())
                 .build();
 
-        return workflowRepository.save(workflow);
+        // return workflowRepository.save(workflow);
+
+        // replace by this
+        Workflow savedWorkflow = workflowRepository.save(workflow);
+
+        addNode(savedWorkflow.getId(), "INPUT", 1, null);
+
+        addNode(
+                savedWorkflow.getId(),
+                "AI",
+                2,
+                "{\"prompt\":\"Convert into a professional email under 80 words\"}"
+        );
+
+        addNode(
+                savedWorkflow.getId(),
+                "OUTPUT",
+                3,
+                "{\"type\":\"EMAIL\"}"
+        );
+
+        return savedWorkflow;
 
     }
 

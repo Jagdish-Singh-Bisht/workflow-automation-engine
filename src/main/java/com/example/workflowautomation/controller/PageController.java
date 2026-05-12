@@ -2,6 +2,9 @@ package com.example.workflowautomation.controller;
 
 
 import com.example.workflowautomation.service.WorkflowService;
+import com.example.workflowautomation.repository.WorkflowTriggerRepository;
+import com.example.workflowautomation.entity.WorkflowTrigger;
+
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,9 +20,14 @@ public class PageController {
 
 
     private final WorkflowService workflowService;
+    private final WorkflowTriggerRepository workflowTriggerRepository;
 
-    public PageController(WorkflowService workflowService) {
+
+    public PageController(WorkflowService workflowService,
+                          WorkflowTriggerRepository workflowTriggerRepository) {
+
         this.workflowService = workflowService;
+        this.workflowTriggerRepository = workflowTriggerRepository;
     }
 
 
@@ -86,6 +94,14 @@ public class PageController {
         // get nodes from service
         model.addAttribute("nodes", workflowService.getOrderedNodes(id));
 
+        WorkflowTrigger trigger = workflowTriggerRepository.findAll()
+                        .stream()
+                                .filter(t -> t.getWorkflowId().equals(id))
+                                        .findFirst()
+                                                .orElse(null);
+
+        model.addAttribute("trigger", trigger);
+
         System.out.println("Workflow ID: " + id);
 
         return "layout";
@@ -119,6 +135,35 @@ public class PageController {
         return "redirect:/workflows/" + id + "/nodes";
 
     }
+
+
+    @PostMapping("/workflows/{id}/trigger")
+    public String saveTrigger(
+            @PathVariable Long id,
+            @RequestParam String cronExpression,
+            @RequestParam(required = false) Boolean active,
+            @RequestParam(required = false) Boolean emailEnabled,
+            @RequestParam(required= false) Boolean whatsappEnabled) {
+
+        WorkflowTrigger trigger =
+                workflowTriggerRepository.findByWorkflowId(id)
+                        .orElse(
+                                WorkflowTrigger.builder()
+                                        .workflowId(id)
+                                        .triggerType("CRON")
+                                        .build()
+                        );
+
+        trigger.setCronExpression(cronExpression);
+        trigger.setActive(active != null);
+        trigger.setEmailEnabled(emailEnabled != null);
+        trigger.setWhatsappEnabled(whatsappEnabled != null);
+
+        workflowTriggerRepository.save(trigger);
+
+        return "redirect:/workflows/" + id + "/nodes";
+    }
+
 
 
 

@@ -33,19 +33,29 @@
         <!-- main content -->
         <div class="p-4 w-100">
 
-            <div th:switch="${page}">
+            <th:block th:switch="${page}">
 
-                <div th:case="'dashboard'" th:replace="dashboard :: content"></div>
+                <th:block th:case="'dashboard'">
+                    <div th:replace="dashboard :: content"></div>
+                </th:block>
 
-                <div th:case="'workflows'" th:replace="workflows :: content"></div>
+                <th:block th:case="'workflows'">
+                    <div th:replace="workflows :: content"></div>
+                </th:block>
 
-                <div th:case="'triggers'" th:replace="triggers :: content"></div>
+                <th:block th:case="'triggers'">
+                    <div th:replace="triggers :: content"></div>
+                </th:block>
 
-                <div th:case="'create-workflow'" th:replace="create-workflow :: content"></div>
+                <th:block th:case="'create-workflow'">
+                    <div th:replace="create-workflow :: content"></div>
+                </th:block>
 
-                <div th:case="'workflow-nodes'" th:replace="workflow-nodes :: content"></div>
+                <th:block th:case="'workflow-nodes'">
+                    <div th:replace="workflow-nodes :: content"></div>
+                </th:block>
 
-            </div>
+            </th:block>
 
         </div>
 
@@ -53,13 +63,27 @@
 
     <div id="resultModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5);">
 
-        <div style="background:#1e1e2f; color:white; width:400px; margin:10% auto; padding:20px; border-radius:10px;">
-
-            <h4>Result</h4>
+<!--        <div style="background:#1e1e2f; color:white; width:400px; margin:10% auto; padding:20px; border-radius:10px;">-->
+        <div style="
+            background:white;
+            color:#212529;
+            width:500px;
+            max-width:90%;
+            margin:8% auto;
+            padding:25px;
+            border-radius:12px;
+            box-shadow:0 4px 20px rgba(0,0,0,0.3);
+        ">
+<!--            <h4>Result</h4>-->
+            <h4 style="margin-bottom:15px;">Workflow Result</h4>
 
             <pre id="resultText" style="white-space:pre-wrap;"></pre>
 
-            <button onclick="closeModal()" style="margin-top:10px; padding:5px 10px;">OK</button>
+<!--            <button onclick="closeModal()" style="margin-top:10px; padding:5px 10px;">OK</button>-->
+            <button onclick="closeModal()"
+                    class="btn btn-primary mt-3">
+                OK
+            </button>
 
         </div>
     </div>

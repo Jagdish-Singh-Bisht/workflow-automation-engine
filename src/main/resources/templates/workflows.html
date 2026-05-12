@@ -10,7 +10,10 @@
 
     <h2>Workflows</h2>
 
-    <button class="btn btn-primary mb-3"> + Create Workflow</button>
+    <a href="/workflows/create"
+       class="btn btn-primary mb-3">
+        + Create Workflow
+    </a>
 
     <div style="margin-bottom: 15px;">
         <input type="text" id="workflowInput"
@@ -31,28 +34,30 @@
         <tbody>
         <tr th:each="wf : ${workflows}">
             <td th:text="${wf.name}"></td>
-            <td>Active</td>
-
             <td>
+                <span class="badge bg-success">Active</span>
+            </td>
+
+            <td style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
                 <!-- Manage Button -->
                 <a th:href="@{'/workflows/' + ${wf.id} + '/nodes'}"
                    class="btn btn-sm btn-warning">Manage</a>
 
 
                 <!-- Email toggle -->
-                <label style="margin-right:10px;">
+                <label class="form-check-label">
                     <input type="checkbox" class="email-toggle" checked>
                     Email
                 </label>
 
                 <!-- WhatsApp toggle -->
-                <label style="margin-right:10px;">
+                <label class="form-check-label">
                     <input type="checkbox" class="wa-toggle">
                     WhatsApp
                 </label>
 
                 <!-- Run Button -->
-                <button class="btn btn-sm btn-success"
+                <button class="btn btn-sm btn-success run-btn"
                         th:onclick="|runWorkflow(${wf.id}, this)|">
                     Run
                 </button>
