@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.ui.Model;
 
+import java.util.List;
+
+
 
 
 @Controller
@@ -196,7 +199,18 @@ public class PageController {
 
 
 
+    @GetMapping("/executions")
+    public String executions(Model model) {
 
+        model.addAttribute("page", "executions");
+
+        List<ExecutionLog> logs =
+                executionLogRepository.findTop20ByOrderByExecutedAtDesc();
+
+        model.addAttribute("logs", logs);
+
+        return "layout";
+    }
 
 
 

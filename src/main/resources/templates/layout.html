@@ -18,15 +18,25 @@
             <hr>
 
             <ul class = "nav flex-column">
+
                 <li class="na-item">
                     <a class="nav-link text-white" href="/dashboard">Dashboard</a>
                 </li>
+
                 <li class="nav-item">
                     <a class="nav-link text-white" href="/workflows">Workflows</a>
                 </li>
+
                 <li class="nav-item">
                     <a class="nav-link text-white" href="/triggers">Triggers</a>
                 </li>
+
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="/executions">
+                        Executions
+                    </a>
+                </li>
+
             </ul>
         </div>
 
@@ -35,24 +45,28 @@
 
             <th:block th:switch="${page}">
 
-                <th:block th:case="'dashboard'">
+                <th:block th:if="${page == 'dashboard'}">
                     <div th:replace="dashboard :: content"></div>
                 </th:block>
 
-                <th:block th:case="'workflows'">
+                <th:block th:if="${page == 'workflows'}">
                     <div th:replace="workflows :: content"></div>
                 </th:block>
 
-                <th:block th:case="'triggers'">
+                <th:block th:if="${page == 'triggers'}">
                     <div th:replace="triggers :: content"></div>
                 </th:block>
 
-                <th:block th:case="'create-workflow'">
+                <th:block th:if="${page == 'create-workflow'}">
                     <div th:replace="create-workflow :: content"></div>
                 </th:block>
 
-                <th:block th:case="'workflow-nodes'">
+                <th:block th:if="${page == 'workflow-nodes'}">
                     <div th:replace="workflow-nodes :: content"></div>
+                </th:block>
+
+                <th:block th:if="${page == 'executions'}">
+                    <div th:replace="executions :: content"></div>
                 </th:block>
 
             </th:block>

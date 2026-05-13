@@ -43,7 +43,9 @@ public class OutputNodeExecutor implements NodeExecutor{
             String subject = "Automated Report";
 
             emailService.sendEmail(to, subject, input);
-            return "Sent via Email";
+            //throw new RuntimeException("testing failure handling");
+
+             return "Sent via Email";
         }
 
 
