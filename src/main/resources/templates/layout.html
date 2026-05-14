@@ -10,126 +10,125 @@
 
 <body>
 
-    <div class="d-flex">
+<div class="d-flex">
 
-        <!-- sidebar -->
-        <div class="bg-dark text-white p-3" style="width: 250px; height: 100vh;">
-            <h4> Automation </h4>
-            <hr>
+    <!-- Sidebar -->
+    <div class="bg-dark text-white p-3"
+         style="width: 250px; height: 100vh;">
 
-            <ul class = "nav flex-column">
+        <h4>Automation</h4>
+        <hr>
 
-                <li class="na-item">
-                    <a class="nav-link text-white" href="/dashboard">Dashboard</a>
-                </li>
+        <ul class="nav flex-column">
 
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="/workflows">Workflows</a>
-                </li>
+            <li class="nav-item">
+                <a class="nav-link text-white"
+                   href="/dashboard">
+                    Dashboard
+                </a>
+            </li>
 
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="/triggers">Triggers</a>
-                </li>
+            <li class="nav-item">
+                <a class="nav-link text-white"
+                   href="/workflows">
+                    Workflows
+                </a>
+            </li>
 
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="/executions">
-                        Executions
-                    </a>
-                </li>
+            <li class="nav-item">
+                <a class="nav-link text-white"
+                   href="/triggers">
+                    Triggers
+                </a>
+            </li>
 
-            </ul>
-        </div>
+            <li class="nav-item">
+                <a class="nav-link text-white"
+                   href="/executions">
+                    Executions
+                </a>
+            </li>
 
-        <!-- main content -->
-        <div class="p-4 w-100">
-
-            <th:block th:switch="${page}">
-
-                <th:block th:if="${page == 'dashboard'}">
-                    <div th:replace="dashboard :: content"></div>
-                </th:block>
-
-                <th:block th:if="${page == 'workflows'}">
-                    <div th:replace="workflows :: content"></div>
-                </th:block>
-
-                <th:block th:if="${page == 'triggers'}">
-                    <div th:replace="triggers :: content"></div>
-                </th:block>
-
-                <th:block th:if="${page == 'create-workflow'}">
-                    <div th:replace="create-workflow :: content"></div>
-                </th:block>
-
-                <th:block th:if="${page == 'workflow-nodes'}">
-                    <div th:replace="workflow-nodes :: content"></div>
-                </th:block>
-
-                <th:block th:if="${page == 'executions'}">
-                    <div th:replace="executions :: content"></div>
-                </th:block>
-
-            </th:block>
-
-        </div>
+        </ul>
 
     </div>
 
-    <div id="resultModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5);">
+    <!-- Main Content -->
+    <div class="p-4 w-100">
 
-<!--        <div style="background:#1e1e2f; color:white; width:400px; margin:10% auto; padding:20px; border-radius:10px;">-->
-        <div style="
-            background:white;
-            color:#212529;
-            width:500px;
-            max-width:90%;
-            margin:8% auto;
-            padding:25px;
-            border-radius:12px;
-            box-shadow:0 4px 20px rgba(0,0,0,0.3);
-        ">
-<!--            <h4>Result</h4>-->
-            <h4 style="margin-bottom:15px;">Workflow Result</h4>
+        <th:block th:if="${page == 'dashboard'}">
+            <div th:replace="dashboard :: content"></div>
+        </th:block>
 
-            <pre id="resultText" style="white-space:pre-wrap;"></pre>
+        <th:block th:if="${page == 'workflows'}">
+            <div th:replace="workflows :: content"></div>
+        </th:block>
 
-<!--            <button onclick="closeModal()" style="margin-top:10px; padding:5px 10px;">OK</button>-->
-            <button onclick="closeModal()"
-                    class="btn btn-primary mt-3">
-                OK
-            </button>
+        <th:block th:if="${page == 'triggers'}">
+            <div th:replace="triggers :: content"></div>
+        </th:block>
 
-        </div>
+        <th:block th:if="${page == 'create-workflow'}">
+            <div th:replace="create-workflow :: content"></div>
+        </th:block>
+
+        <th:block th:if="${page == 'workflow-details'}">
+            <div th:replace="workflow-details :: content"></div>
+        </th:block>
+
+        <th:block th:if="${page == 'workflow-nodes'}">
+            <div th:replace="workflow-nodes :: content"></div>
+        </th:block>
+
+        <th:block th:if="${page == 'executions'}">
+            <div th:replace="executions :: content"></div>
+        </th:block>
+
     </div>
 
-    <!--
-    <script>
-        function runWorkflow(workflowId) {
+</div>
 
-            console.log("Clicked Run for:", workflowId);
+<!-- Result Modal -->
+<div id="resultModal"
+     style="
+        display:none;
+        position:fixed;
+        top:0;
+        left:0;
+        width:100%;
+        height:100%;
+        background:rgba(0,0,0,0.5);
+     ">
 
-            const input = prompt("Enter input for workflow:");
+    <div style="
+        background:white;
+        color:#212529;
+        width:500px;
+        max-width:90%;
+        margin:8% auto;
+        padding:25px;
+        border-radius:12px;
+        box-shadow:0 4px 20px rgba(0,0,0,0.3);
+    ">
 
-            if (!input) return;
+        <h4 style="margin-bottom:15px;">
+            Workflow Result
+        </h4>
 
-            fetch('/api/workflows/' + workflowId + '/run?input=' + encodeURIComponent(input), {
-                method: 'POST'
-            })
-            .then(response => response.text())
-            .then(data => {
-                alert("Result:\n\n" + data);
-            })
-            .catch(error => {
-                console.error(error);
-                alert("Error running workflow");
-            });
-        }
-    </script>
+        <pre id="resultText"
+             style="white-space:pre-wrap;">
+        </pre>
 
+        <button onclick="closeModal()"
+                class="btn btn-primary mt-3">
+            OK
+        </button>
 
--->
+    </div>
 
-    <script src ="/js/workflows.js"> </script>
+</div>
+
+<script src="/js/workflows.js"></script>
 
 </body>
 </html>

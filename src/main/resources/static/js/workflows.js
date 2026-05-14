@@ -24,18 +24,40 @@ function runWorkflow(workflowId, buttonElement) {
 
     console.log("Clicked Run for:", workflowId);
 
-    const input = document.getElementById("workflowInput").value;
+    let inputField = document.getElementById("workflowInput");
 
-    if (!input || input.trim() === "") {
-        showModal("Please enter input before running workflow.");
-        return;
+    let input;
+
+    if(inputField) {
+        input = inputField.value;
+
+        if (!input || input.trim() === "") {
+            showModal("Please enter input before running workflow.");
+            return;
+        }
+
+    } else {
+
+        input = prompt("Enter input for workflow:");
+
+        if (!input || input.trim() === "") {
+            return;
+        }
     }
 
     // 🧠 get current row
-    const row = buttonElement.closest("tr");
+    let emailEnabled = true;
+    let whatsappEnabled = false;
 
-    const emailEnabled = row.querySelector(".email-toggle").checked;
-    const whatsappEnabled = row.querySelector(".wa-toggle").checked;
+    if(buttonElement) {
+
+        const row = buttonElement.closest("tr");
+
+        if(row) {
+            emailEnabled = row.querySelector(".email-toggle").checked;
+            whatsappEnabled = row.querySelector(".wa-toggle").checked;
+        }
+    }
 
     console.log("Email:", emailEnabled, "WhatsApp:", whatsappEnabled);
 

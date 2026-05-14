@@ -1,6 +1,7 @@
 package com.example.workflowautomation.controller;
 
 
+import com.example.workflowautomation.entity.Workflow;
 import com.example.workflowautomation.entity.ExecutionLog;
 import com.example.workflowautomation.repository.WorkflowRepository;
 import com.example.workflowautomation.repository.ExecutionLogRepository;
@@ -214,7 +215,32 @@ public class PageController {
 
 
 
+    // Workflow detail page
+    @GetMapping("/workflows/{id}")
+    public String workflowDetails(@PathVariable Long id, Model model) {
 
+        Workflow workflow = workflowRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Workflow not found"));
+
+        WorkflowTrigger trigger = workflowTriggerRepository.findByWorkflowId(id)
+                .orElse(null);
+
+        List<ExecutionLog> logs = executionLogRepository
+                .findByWorkflowIdOrderByExecutedAtDesc(id);
+
+
+        model.addAttribute("page", "workflow-details");
+        model.addAttribute("workflow", workflow);
+        model.addAttribute("trigger", trigger);
+        model.addAttribute("totalExecutions", logs.size());
+
+        model.addAttribute(
+                "lastExecutiion",
+                logs.isEmpty() ? null : logs.get(0)
+        );
+
+        return "layout";
+    }
 
 
 
