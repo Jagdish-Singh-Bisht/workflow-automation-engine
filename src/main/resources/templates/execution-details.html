@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div th:fragment="content">
+
+    <h2>Execution Details</h2>
+    <hr>
+
+    <p>
+        <strong>Status:</strong>
+        <span th:text="${log.status}"></span>
+    </p>
+
+    <p>
+        <strong>Executed At:</strong>
+        <span th:text="${#temporals.format(log.executedAt, 'dd MMM yyyy HH:mm')}"></span>
+    </p>
+
+    <p>
+        <strong>Input:</strong>
+    </p>
+
+    <div class="bg-light border rounded p-3 mb-4">
+        <pre class="mb-0"
+             th:text="${log.inputData}">
+        </pre>
+    </div>
+
+
+
+    <p>
+        <strong>Output:</strong>
+    </p>
+
+    <div class="bg-light border rounded p-3">
+        <pre class="mb-0"
+            th:text="${log.outputData}">
+        </pre>
+    </div>
+
+</div>
+
+</body>
+</html>
