@@ -84,6 +84,10 @@
             <div th:replace="executions :: content"></div>
         </th:block>
 
+        <th:block th:if="${page == 'execution-details'}">
+            <div th:replace="execution-details :: content"></div>
+        </th:block>
+
     </div>
 
 </div>

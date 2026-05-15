@@ -77,6 +77,44 @@
             View Executions
         </a>
 
+        <hr>
+
+        <h4 class="mt-4">Recent Executions</h4>
+
+        <table class="table table-bordered table-sm mt-3">
+
+            <thead>
+            <tr>
+                <th>Status</th>
+                <th>Executed At</th>
+                <th>Output</th>
+            </tr>
+            </thead>
+
+            <tbody>
+
+            <tr th:each="log : ${recentLogs}">
+
+                <td>
+            <span class="badge"
+                  th:classappend="${log.status == 'SUCCESS'} ? 'bg-success' : 'bg-danger'"
+                  th:text="${log.status}">
+            </span>
+                </td>
+
+                <td style="white-space: nowrap;"
+                    th:text="${#temporals.format(log.executedAt, 'dd MMM yyyy HH:mm')}">
+                </td>
+
+                <td th:text="${#strings.abbreviate(log.outputData, 60)}">
+                </td>
+
+            </tr>
+
+            </tbody>
+
+        </table>
+
     </div>
 
 </div>

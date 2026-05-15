@@ -239,9 +239,31 @@ public class PageController {
                 logs.isEmpty() ? null : logs.get(0)
         );
 
+        model.addAttribute(
+                "recentLogs",
+                logs.stream().limit(10).toList()
+        );
+
         return "layout";
     }
 
+
+
+    // ExecutionDetailsPage
+
+    @GetMapping("/executions/{id}")
+    public String executionDetails(@PathVariable Long id,
+                                   Model model) {
+
+        ExecutionLog log = executionLogRepository.findById(id)
+                .orElseThrow();
+
+        model.addAttribute("page", "execution-details");
+        model.addAttribute("log", log);
+
+        return "layout";
+
+    }
 
 
 }

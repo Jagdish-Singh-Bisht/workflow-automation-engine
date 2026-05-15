@@ -19,6 +19,7 @@
             <th>Status</th>
             <th>Executed At</th>
             <th>Output</th>
+            <th>Actions</th>
         </tr>
         </thead>
 
@@ -38,6 +39,13 @@
             <td th:text="${#temporals.format(log.executedAt, 'dd MMM yyyy HH:mm')}"></td>
 
             <td th:text="${log.outputData}"></td>
+
+            <td>
+                <a th:href="@{'/executions/' + ${log.id}}"
+                   class="btn btn-sm btn-dark">
+                    View
+                </a>
+            </td>
 
         </tr>
 
