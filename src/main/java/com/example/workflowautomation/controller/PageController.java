@@ -266,4 +266,23 @@ public class PageController {
     }
 
 
+    @GetMapping("/workflows/{id}/executions")
+    public String viewExecutions(@PathVariable Long id, Model model) {
+
+        Workflow workflow = workflowRepository.findById(id)
+                .orElseThrow();
+
+        List<ExecutionLog> logs = executionLogRepository
+                .findByWorkflowIdOrderByExecutedAtDesc(id);
+
+        model.addAttribute("page", "executions");
+        model.addAttribute("logs", logs);
+        model.addAttribute("workflow", workflow);
+
+
+        return "layout";
+    }
+
+
+
 }

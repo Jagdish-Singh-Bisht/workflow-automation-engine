@@ -72,7 +72,12 @@
             Run Workflow
         </button>
 
-        <a href="/executions"
+<!--        <a href="/executions"-->
+<!--           class="btn btn-dark">-->
+<!--            View Executions-->
+<!--        </a>-->
+
+        <a th:href="@{'/workflows/' + ${workflow.id} + '/executions'}"
            class="btn btn-dark">
             View Executions
         </a>
