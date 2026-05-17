@@ -2,6 +2,8 @@ package com.example.workflowautomation.controller;
 
 
 
+import com.example.workflowautomation.entity.WorkflowTrigger;
+import com.example.workflowautomation.repository.WorkflowTriggerRepository;
 import com.example.workflowautomation.entity.ExecutionLog;
 import com.example.workflowautomation.repository.ExecutionLogRepository;
 import com.example.workflowautomation.dto.ExecutionLogResponse;
@@ -42,7 +44,7 @@ public class WorkflowController {
     private final WorkflowService workflowService;
     private final WorkflowEngine workflowEngine;
     private final ExecutionLogRepository executionLogRepository;
-
+    private final WorkflowTriggerRepository workflowTriggerRepository;
 
 
     // Create Workflow
@@ -133,6 +135,23 @@ public class WorkflowController {
 
     }
 
+
+    // Toggle Trigger
+    @PostMapping("/workflows/{id}/toggle-trigger")
+    public ResponseEntity<String> toggleTrigger(@PathVariable Long id) {
+
+        WorkflowTrigger trigger = workflowTriggerRepository.findByWorkflowId(id)
+                .orElseThrow();
+
+        trigger.setActive(!trigger.isActive());
+
+        workflowTriggerRepository.save(trigger);
+
+        String status =
+                trigger.isActive() ? "Trigger Activated" : "Trigger Deactivated";
+
+        return ResponseEntity.ok(status);
+    }
 
 
 

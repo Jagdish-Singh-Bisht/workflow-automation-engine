@@ -120,3 +120,23 @@ window.retryExecution = function(executionId, buttonElement) {
             buttonElement.innerText = "Retry Execution";
         });
 }
+
+window.toggleTrigger = function(workflowId, buttonElement) {
+
+    fetch('/api/workflows/workflows/' + workflowId + '/toggle-trigger', {
+        method: 'POST'
+    })
+        .then(response => response.text())
+        .then(data => {
+
+            showModal(data);
+
+            location.reload();
+        })
+        .catch(error => {
+
+            console.error(error);
+
+            showModal("Failed to toggle trigger");
+        });
+}

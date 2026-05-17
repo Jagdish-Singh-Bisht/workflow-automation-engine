@@ -24,6 +24,13 @@
                     <span th:text="${trigger != null and trigger.isActive ? 'Active' : 'Inactive'}"></span>
 
                 </span>
+
+                <button class="btn btn-sm mt-2"
+                        th:classappend="${trigger != null and trigger.isActive} ? 'btn-danger' : 'btn-success'"
+                        th:text="${trigger != null and trigger.isActive} ? 'Deactivate Trigger' : 'Activate Trigger'"
+                        th:onclick="'toggleTrigger(' + ${workflow.id} + ', this)'">
+                </button>
+
             </div>
         </div>
 
