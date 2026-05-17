@@ -93,3 +93,30 @@ function runWorkflow(workflowId, buttonElement) {
             isWorkflowRunning = false;
         });
 }
+
+window.retryExecution = function(executionId, buttonElement) {
+
+    buttonElement.disabled = true;
+    buttonElement.innerText = "Retrying...";
+
+    fetch('/api/workflows/executions/' + executionId + '/retry', {
+        method: 'POST'
+    })
+        .then(response => response.text())
+        .then(data => {
+
+            showModal(data);
+
+            buttonElement.disabled = false;
+            buttonElement.innerText = "Retry Execution";
+        })
+        .catch(error => {
+
+            console.error(error);
+
+            showModal("Retry failed");
+
+            buttonElement.disabled = false;
+            buttonElement.innerText = "Retry Execution";
+        });
+}

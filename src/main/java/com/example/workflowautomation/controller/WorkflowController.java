@@ -1,5 +1,9 @@
 package com.example.workflowautomation.controller;
 
+
+
+import com.example.workflowautomation.entity.ExecutionLog;
+import com.example.workflowautomation.repository.ExecutionLogRepository;
 import com.example.workflowautomation.dto.ExecutionLogResponse;
 import com.example.workflowautomation.dto.NodeExecutionLogResponse;
 import com.example.workflowautomation.dto.WorkflowRunRequest;
@@ -8,11 +12,25 @@ import com.example.workflowautomation.entity.Workflow;
 import com.example.workflowautomation.engine.WorkflowEngine;
 import com.example.workflowautomation.service.WorkflowService;
 
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PathVariable;
+
+import org.springframework.http.ResponseEntity;
 
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
+
+
+
+
+
+
 
 
 @RestController
@@ -23,6 +41,8 @@ public class WorkflowController {
 
     private final WorkflowService workflowService;
     private final WorkflowEngine workflowEngine;
+    private final ExecutionLogRepository executionLogRepository;
+
 
 
     // Create Workflow
@@ -89,6 +109,32 @@ public class WorkflowController {
 
         return workflowEngine.runWorkflow(request);
     }
+
+
+    // Retry Execution
+    @PostMapping("/executions/{id}/retry")
+    public ResponseEntity<String> retryExecution(@PathVariable Long id) {
+
+        ExecutionLog log = executionLogRepository.findById(id)
+                .orElseThrow();
+
+        WorkflowRunRequest request = new WorkflowRunRequest();
+
+        request.setWorkflowId(log.getWorkflow().getId());
+
+        request.setInput(log.getInputData());
+
+        request.setEmailEnabled(true);
+        request.setWhatsappEnabled(false);
+
+        workflowEngine.runWorkflow(request);
+
+        return ResponseEntity.ok("Execution retired successfully");
+
+    }
+
+
+
 
 }
 
