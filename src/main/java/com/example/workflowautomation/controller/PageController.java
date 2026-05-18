@@ -17,9 +17,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.ui.Model;
 
+import java.util.HashMap;
 import java.util.List;
-
-
+import java.util.Map;
+import java.util.Optional;
 
 
 @Controller
@@ -95,14 +96,52 @@ public class PageController {
     }
 
 
+//    @GetMapping("/workflows")
+//    public String workflows(Model model) {
+//        model.addAttribute("page", "workflows");
+//
+//        model.addAttribute("workflows", workflowService.getAllWorkflows());
+//
+//        return "layout";
+//    }
+
     @GetMapping("/workflows")
     public String workflows(Model model) {
+
         model.addAttribute("page", "workflows");
 
-        model.addAttribute("workflows", workflowService.getAllWorkflows());
+        List<Workflow> workflows =
+                workflowService.getAllWorkflows();
+
+        Map<Long, Boolean> workflowStatusMap =
+                new HashMap<>();
+
+        for (Workflow workflow : workflows) {
+
+            Optional<WorkflowTrigger> triggerOptional =
+                    workflowTriggerRepository
+                            .findByWorkflowId(workflow.getId());
+
+            boolean isActive =
+                    triggerOptional.isPresent()
+                            && triggerOptional.get().isActive();
+
+            workflowStatusMap.put(
+                    workflow.getId(),
+                    isActive
+            );
+        }
+
+        model.addAttribute("workflows", workflows);
+
+        model.addAttribute(
+                "workflowStatusMap",
+                workflowStatusMap
+        );
 
         return "layout";
     }
+
 
     @GetMapping("/triggers")
     public String triggers(Model model) {

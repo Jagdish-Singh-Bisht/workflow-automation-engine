@@ -42,7 +42,11 @@
 
             </td>
             <td>
-                <span class="badge bg-success">Active</span>
+<!--                <span class="badge bg-success">Active</span>-->
+                <span class="badge"
+                      th:classappend="${workflowStatusMap[wf.id]} ? 'bg-success' : 'bg-secondary'"
+                      th:text="${workflowStatusMap[wf.id]} ? 'Active' : 'Inactive'">
+                </span>
             </td>
 
             <td style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
