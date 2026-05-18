@@ -66,6 +66,15 @@ public class PageController {
 
         ExecutionLog lastExecution = executionLogRepository.findTopByOrderByExecutedAtDesc();
 
+        List<ExecutionLog> recentExecutions = executionLogRepository
+                .findTop5ByOrderByExecutedAtDesc();
+
+        long successfulExecutions = executionLogRepository
+                .countByStatus("SUCCESS");
+
+        long failedExecutions = executionLogRepository.countByStatus("FAILURE");
+
+
         model.addAttribute("page", "dashboard");
 
         model.addAttribute("totalWorkflows", totalWorkflows);
@@ -76,6 +85,11 @@ public class PageController {
                 "lastExecutionTime",
                 lastExecution != null ? lastExecution.getExecutedAt() : "--"
         );
+
+        model.addAttribute("recentExecutions", recentExecutions);
+
+        model.addAttribute("successfulExecutions", successfulExecutions);
+        model.addAttribute("failedExecutions", failedExecutions);
 
         return "layout";
     }

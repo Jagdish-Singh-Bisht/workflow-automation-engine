@@ -20,10 +20,16 @@
                 </div>
             </div>
 
+<!--            <div class="col-md-3">-->
+<!--                <div class="card p-3">-->
+<!--                    <h5>Last Execution</h5>-->
+<!--                    <p th:text="${#temporals.format(lastExecutionTime, 'dd MMM yyyy HH:mm')}"></p>-->
+<!--                </div>-->
+<!--            </div>-->
             <div class="col-md-3">
                 <div class="card p-3">
-                    <h5>Last Execution</h5>
-                    <p th:text="${#temporals.format(lastExecutionTime, 'dd MMM yyyy HH:mm')}"></p>
+                    <h5>Successful Executions</h5>
+                    <p th:text="${successfulExecutions}"></p>
                 </div>
             </div>
 
@@ -41,8 +47,60 @@
                 </div>
             </div>
 
+            <div class="col-md-3">
+                <div class="card p-3">
+                    <h5>Failed Executions</h5>
+                    <p th:text="${failedExecutions}"></p>
+                </div>
+            </div>
 
         </div>
+
+        <hr>
+
+        <h4 class="mt-4">Recent Activity</h4>
+
+        <table class="table table-sm table-bordered mt-3">
+
+            <thead>
+            <tr>
+                <th>Workflow</th>
+                <th>Status</th>
+                <th>Executed At</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+
+            <tbody>
+
+            <tr th:each="log : ${recentExecutions}">
+
+                <td th:text="${log.workflow.name}"></td>
+
+                <td>
+            <span class="badge"
+                  th:classappend="${log.status == 'SUCCESS'} ? 'bg-success' : 'bg-danger'"
+                  th:text="${log.status}">
+            </span>
+                </td>
+
+                <td style="white-space: nowrap;"
+                    th:text="${#temporals.format(log.executedAt, 'dd MMM yyyy HH:mm')}">
+                </td>
+
+                <td>
+                    <a th:href="@{'/executions/' + ${log.id}}"
+                       class="btn btn-sm btn-dark">
+                        View
+                    </a>
+                </td>
+
+            </tr>
+
+            </tbody>
+
+        </table>
+
     </div>
 
 </body>

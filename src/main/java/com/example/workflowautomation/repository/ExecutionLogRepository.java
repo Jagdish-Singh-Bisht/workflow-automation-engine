@@ -19,5 +19,8 @@ public interface ExecutionLogRepository extends JpaRepository<ExecutionLog, Long
 
     List<ExecutionLog> findTop20ByOrderByExecutedAtDesc();
 
+    List<ExecutionLog> findTop5ByOrderByExecutedAtDesc();
+
+    long countByStatus(String status);
 
 }
