@@ -33,7 +33,14 @@
 
         <tbody>
         <tr th:each="wf : ${workflows}">
-            <td th:text="${wf.name}"></td>
+            <td style="cursor: help;"
+                th:title="${wf.name == 'EmailFlow' ? 'Converts raw text into formatted email notifications'
+              : (wf.name == 'Shipment Report Flow' ? 'Processes shipment workflow and output routing'
+              : 'Automated workflow execution')}">
+
+                <span th:text="${wf.name}"></span>
+
+            </td>
             <td>
                 <span class="badge bg-success">Active</span>
             </td>
