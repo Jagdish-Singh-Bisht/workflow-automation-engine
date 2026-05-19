@@ -98,6 +98,40 @@ public class WorkflowEngine {
                     workflowNodeRepository.findByWorkflowOrderBySequenceOrderAsc(workflow);
 
 
+//            for (WorkflowNode node : nodes) {
+//
+//                NodeExecutor executor =
+//                        executorFactory.getExecutor(node.getNodeType());
+//
+//                String inputBeforeNode = currentData;
+//
+//                currentData = executor.execute(currentData, node, context);
+//
+//
+//                NodeExecutionLog log = NodeExecutionLog.builder()
+//                        .workflow(workflow)
+//                        .nodeType(node.getNodeType())
+//                        .status("SUCCESS")
+//                        .inputData(inputBeforeNode)
+//                        .outputData(currentData)
+//                        .executedAt(java.time.LocalDateTime.now())
+//                        .build();
+//
+//                nodeExecutionLogRepository.save(log);
+//
+//            }
+
+            ExecutionLog executionLog = ExecutionLog.builder()
+                    .workflow(workflow)
+                    .inputData(input)
+                    .status("SUCCESS")
+                    .executedAt(java.time.LocalDateTime.now())
+                    .build();
+
+            ExecutionLog savedExecution =
+                    executionLogRepository.save(executionLog);
+
+
             for (WorkflowNode node : nodes) {
 
                 NodeExecutor executor =
@@ -107,9 +141,9 @@ public class WorkflowEngine {
 
                 currentData = executor.execute(currentData, node, context);
 
-
                 NodeExecutionLog log = NodeExecutionLog.builder()
                         .workflow(workflow)
+                        .executionLog(savedExecution)
                         .nodeType(node.getNodeType())
                         .status("SUCCESS")
                         .inputData(inputBeforeNode)
@@ -118,19 +152,22 @@ public class WorkflowEngine {
                         .build();
 
                 nodeExecutionLogRepository.save(log);
-
             }
 
-            // SAVE SUCCESS LOG
-            ExecutionLog log = ExecutionLog.builder()
-                    .workflow(workflow)
-                    .inputData(input)
-                    .outputData(currentData)
-                    .status("SUCCESS")
-                    .executedAt(java.time.LocalDateTime.now())
-                    .build();
+            savedExecution.setOutputData(currentData);
 
-            executionLogRepository.save(log);
+            executionLogRepository.save(savedExecution);
+
+//            // SAVE SUCCESS LOG
+//            ExecutionLog log = ExecutionLog.builder()
+//                    .workflow(workflow)
+//                    .inputData(input)
+//                    .outputData(currentData)
+//                    .status("SUCCESS")
+//                    .executedAt(java.time.LocalDateTime.now())
+//                    .build();
+//
+//            executionLogRepository.save(log);
             return currentData;
 
         } catch (Exception  e) {

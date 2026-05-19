@@ -10,4 +10,7 @@ import java.util.List;
 public interface NodeExecutionLogRepository extends JpaRepository<NodeExecutionLog, Long> {
 
     List<NodeExecutionLog> findByWorkflowIdOrderByExecutedAtDesc(Long workflowId);
+
+    List<NodeExecutionLog> findByExecutionLogIdOrderByExecutedAtDesc(Long executionLogId);
+
 }

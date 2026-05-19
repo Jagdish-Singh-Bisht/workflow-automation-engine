@@ -1,8 +1,10 @@
 package com.example.workflowautomation.controller;
 
 
+import com.example.workflowautomation.entity.NodeExecutionLog;
 import com.example.workflowautomation.entity.Workflow;
 import com.example.workflowautomation.entity.ExecutionLog;
+import com.example.workflowautomation.repository.NodeExecutionLogRepository;
 import com.example.workflowautomation.repository.WorkflowRepository;
 import com.example.workflowautomation.repository.ExecutionLogRepository;
 import com.example.workflowautomation.service.WorkflowService;
@@ -31,18 +33,19 @@ public class PageController {
     private final WorkflowTriggerRepository workflowTriggerRepository;
     private final WorkflowRepository workflowRepository;
     private final ExecutionLogRepository executionLogRepository;
-
+    private final NodeExecutionLogRepository nodeExecutionLogRepository;
 
 
     public PageController(WorkflowService workflowService,
                           WorkflowTriggerRepository workflowTriggerRepository,
                           WorkflowRepository workflowRepository,
-                          ExecutionLogRepository executionLogRepository) {
+                          ExecutionLogRepository executionLogRepository, NodeExecutionLogRepository nodeExecutionLogRepository) {
 
         this.workflowService = workflowService;
         this.workflowTriggerRepository = workflowTriggerRepository;
         this.workflowRepository = workflowRepository;
         this.executionLogRepository = executionLogRepository;
+        this.nodeExecutionLogRepository = nodeExecutionLogRepository;
     }
 
 
@@ -300,8 +303,6 @@ public class PageController {
         return "layout";
     }
 
-
-
     // ExecutionDetailsPage
 
     @GetMapping("/executions/{id}")
@@ -311,8 +312,15 @@ public class PageController {
         ExecutionLog log = executionLogRepository.findById(id)
                 .orElseThrow();
 
+        List<NodeExecutionLog> nodeLogs = nodeExecutionLogRepository
+                .findByExecutionLogIdOrderByExecutedAtDesc(
+                        log.getId()
+                );
+
         model.addAttribute("page", "execution-details");
         model.addAttribute("log", log);
+
+        model.addAttribute("nodeLogs", nodeLogs);
 
         return "layout";
 

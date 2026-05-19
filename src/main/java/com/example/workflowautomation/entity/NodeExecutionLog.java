@@ -49,4 +49,8 @@ public class NodeExecutionLog {
     private String outputData;
 
 
+    @ManyToOne
+    @JoinColumn(name = "execution_log_id")
+    private ExecutionLog executionLog;
+
 }

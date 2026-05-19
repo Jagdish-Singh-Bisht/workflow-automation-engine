@@ -80,6 +80,7 @@ public class AINodeExecutor implements NodeExecutor {
 
         // 6. Call AI
         try {
+//            System.out.println(finalPrompt);
             return aiService.generateResponse(finalPrompt);
         } catch (Exception e) {
             e.printStackTrace();
