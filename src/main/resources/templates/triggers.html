@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www/thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -12,21 +12,54 @@
 
 <!--        <button class="btn btn-primary mb-3"> + Add Trigger</button>-->
 
+        <a href="/triggers/create"
+           class="btn btn-primary mb-3">
+
+            + Create Trigger
+
+        </a>
+
+
         <table class="table table-bordered">
             <thead>
                 <tr>
                     <th>Workflow</th>
+                    <th>Status</th>
                     <th>Type</th>
                     <th>Cron</th>
                 </tr>
             </thead>
 
+<!--            <tbody>-->
+<!--                <tr>-->
+<!--                    <td>Sample Workflow</td>-->
+<!--                    <td>CRON</td>-->
+<!--                    <td>*/5 * * * *</td>-->
+<!--                </tr>-->
+<!--            </tbody>-->
+
             <tbody>
-                <tr>
-                    <td>Sample Workflow</td>
-                    <td>CRON</td>
-                    <td>*/5 * * * *</td>
-                </tr>
+
+            <tr th:each="trigger : ${triggers}">
+
+                <td th:text="${trigger.workflowId}"></td>
+
+                <td>
+
+            <span class="badge"
+                  th:classappend="${trigger.isActive} ? 'bg-success' : 'bg-secondary'"
+                  th:text="${trigger.isActive} ? 'Active' : 'Inactive'">
+
+            </span>
+
+                </td>
+
+                <td th:text="${trigger.triggerType}"></td>
+
+                <td th:text="${trigger.cronExpression}"></td>
+
+            </tr>
+
             </tbody>
 
         </table>

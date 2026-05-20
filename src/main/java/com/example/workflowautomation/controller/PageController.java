@@ -149,6 +149,7 @@ public class PageController {
     @GetMapping("/triggers")
     public String triggers(Model model) {
         model.addAttribute("page", "triggers");
+        model.addAttribute("triggers", workflowTriggerRepository.findAll());
 
         return "layout";
     }
@@ -345,5 +346,45 @@ public class PageController {
     }
 
 
+    @GetMapping("/triggers/create")
+    public String createTrigger(Model model) {
+
+        model.addAttribute("page", "trigger-create");
+
+        model.addAttribute(
+                "workflows",
+                workflowService.getAllWorkflows()
+        );
+
+        return "layout";
+    }
+
+
+    @PostMapping("/triggers/create")
+    public String saveTrigger( @RequestParam Long workflowId,
+                               @RequestParam String cronExpression) {
+
+        Workflow workflow = workflowRepository.findById(workflowId)
+                .orElseThrow();
+
+        WorkflowTrigger trigger =
+                workflowTriggerRepository
+                        .findByWorkflowId(workflowId)
+                        .orElseGet(() -> {
+                           WorkflowTrigger newTrigger = new WorkflowTrigger();
+                           newTrigger.setActive(true);
+                           return newTrigger;
+                        });
+
+        trigger.setWorkflowId(workflowId);
+        trigger.setTriggerType("CRON");
+        trigger.setCronExpression(cronExpression);
+        trigger.setActive(true);
+
+        workflowTriggerRepository.save(trigger);
+
+        return "redirect:/triggers";
+
+    }
 
 }

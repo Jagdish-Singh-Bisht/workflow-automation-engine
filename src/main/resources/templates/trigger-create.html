@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<div th:fragment="content">
+
+  <h2>Create Trigger</h2>
+
+  <form method="post" action="/triggers/create">
+
+    <div class="mb-3">
+
+      <label>Workflow</label>
+
+      <select class="form-select" name="workflowId">
+
+        <option th:each="wf : ${workflows}"
+                th:value="${wf.id}"
+                th:text="${wf.name}">
+        </option>
+
+      </select>
+
+    </div>
+
+    <div class="mb-3">
+
+      <label>Cron Expression</label>
+
+      <input type="text"
+             class="form-control"
+             name="cronExpression"
+             placeholder="*/5 * * * *">
+
+    </div>
+
+    <button class="btn btn-success">
+      Save Trigger
+    </button>
+
+  </form>
+
+</div>
+</body>
+</html>
