@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Register</title>
+</head>
+
+<body>
+
+    <h2>Register</h2>
+
+    <p th:if="${error}"
+       th:text="${error}"
+       style="color:red;">
+    </p>
+
+    <!-- This is entire form bond to RegisterRequest    -->
+    <!-- Binds the entire form to an object. -->
+    <form
+            th:action="@{/register}"
+            th:object="${registerRequest}"
+            method="post">
+
+        <label>Username</label>
+
+        <!-- *{ } = use the username field inside the current object -->
+        <input
+                type="text"
+                th:field="*{username}"
+                required>
+
+        <!-- Show all validation errors for the username field. -->
+        <p
+            th:errors="*{username}"
+            style="color:red;">
+        </p>
+
+
+        <br><br>
+
+        <label>Password</label>
+        <input
+                type="password"
+                th:field="*{password}"
+                required>
+
+        <p
+            th:errors="*{password}"
+            style="color:red;">
+
+        </p>
+
+
+        <br><br>
+
+        <button type="submit">
+            Register
+        </button>
+
+    </form>
+
+    <br>
+
+    <a th:href="@{/login}">
+        Already have an account? Login
+    </a>
+
+</body>
+
+</html>
