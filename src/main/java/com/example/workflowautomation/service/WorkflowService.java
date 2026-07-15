@@ -1,17 +1,33 @@
 package com.example.workflowautomation.service;
 
 
+
+import com.example.workflowautomation.exception.WorkflowAccessDeniedException;
 import com.example.workflowautomation.dto.ExecutionLogResponse;
 import com.example.workflowautomation.dto.NodeExecutionLogResponse;
-import com.example.workflowautomation.entity.*;
-import com.example.workflowautomation.repository.*;
 
-import lombok.RequiredArgsConstructor;
+import com.example.workflowautomation.entity.Workflow;
+import com.example.workflowautomation.entity.User;
+import com.example.workflowautomation.entity.WorkflowNode;
+import com.example.workflowautomation.entity.ExecutionLog;
+import com.example.workflowautomation.entity.NodeExecutionLog;
+
+import com.example.workflowautomation.repository.WorkflowRepository;
+import com.example.workflowautomation.repository.UserRepository;
+import com.example.workflowautomation.repository.WorkflowNodeRepository;
+import com.example.workflowautomation.repository.ExecutionLogRepository;
+import com.example.workflowautomation.repository.NodeExecutionLogRepository;
+
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import lombok.RequiredArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import com.example.workflowautomation.security.CustomUserDetails;
 
 
 
@@ -29,10 +45,14 @@ public class WorkflowService {
 
 
     // Create Workflow
-    public Workflow createWorkflow(String username, String workflowName) {
+    public Workflow createWorkflow(String workflowName) {
 
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        Authentication authentication = SecurityContextHolder
+                .getContext().getAuthentication();
+
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+
+        User user = userDetails.getUser();
 
         Workflow workflow = Workflow.builder()
                 .name(workflowName)
@@ -65,7 +85,27 @@ public class WorkflowService {
 
     }
 
+    public Workflow getWorkflowForCurrentUser(Long workflowId) {
 
+        Authentication authentication = SecurityContextHolder
+                .getContext().getAuthentication();
+
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+
+        User currentUser = userDetails.getUser();
+
+        Workflow workflow = workflowRepository.findById(workflowId)
+                .orElseThrow(() -> new RuntimeException("Workflow not found"));
+
+        if (!workflow.getUser().getId().equals(currentUser.getId())) {
+            throw new WorkflowAccessDeniedException(
+                    "You are not allowed to access this workflow."
+            );
+        }
+
+        return workflow;
+
+    }
 
     // Add Node to Workflow
     public WorkflowNode addNode(Long workflowId,
@@ -73,8 +113,7 @@ public class WorkflowService {
                                 Integer sequenceOrder,
                                 String configJson) {
 
-        Workflow workflow = workflowRepository.findById(workflowId)
-                .orElseThrow(() -> new RuntimeException("Workflow not found"));
+        Workflow workflow = getWorkflowForCurrentUser(workflowId);
 
         WorkflowNode node = WorkflowNode.builder()
                 .workflow(workflow)
@@ -91,8 +130,7 @@ public class WorkflowService {
     // Get Nodes in Execution Order
     public List<WorkflowNode> getOrderedNodes(Long workflowId) {
 
-        Workflow workflow = workflowRepository.findById(workflowId)
-                .orElseThrow(() -> new RuntimeException("Workflow not found"));
+        Workflow workflow = getWorkflowForCurrentUser(workflowId);
 
         return workflowNodeRepository
                 .findByWorkflowOrderBySequenceOrderAsc(workflow);

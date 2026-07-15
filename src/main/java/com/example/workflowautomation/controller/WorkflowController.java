@@ -50,10 +50,9 @@ public class WorkflowController {
     // Create Workflow
     @PostMapping("/create")
     public Workflow createWorkflow(
-            @RequestParam String username,
             @RequestParam String workflowName) {
 
-        return workflowService.createWorkflow(username, workflowName);
+        return workflowService.createWorkflow(workflowName);
     }
 
 
