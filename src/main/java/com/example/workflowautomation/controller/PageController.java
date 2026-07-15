@@ -168,7 +168,7 @@ public class PageController {
     public String createWorkflow(@RequestParam String name) {
 
         // For now hardcode user
-        workflowService.createWorkflow("ajju", name);
+        workflowService.createWorkflow(name);
 
         return "redirect:/workflows";
     }
