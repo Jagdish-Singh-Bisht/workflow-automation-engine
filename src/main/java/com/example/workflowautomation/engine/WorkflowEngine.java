@@ -1,6 +1,7 @@
 package com.example.workflowautomation.engine;
 
 
+import com.example.workflowautomation.service.WorkflowService;
 import com.example.workflowautomation.dto.WorkflowRunRequest;
 import com.example.workflowautomation.entity.Student;
 import com.example.workflowautomation.entity.Task;
@@ -31,14 +32,15 @@ public class WorkflowEngine {
     private final TemplateRepository templateRepository;
     private final StudentRepository studentRepository;
 
+    private final WorkflowService workflowService;
+
 
 
     public String runWorkflow(WorkflowRunRequest request) {
 
         String input = request.getInput();
 
-        Workflow workflow = workflowRepository.findById(request.getWorkflowId())
-                .orElseThrow(() -> new RuntimeException("Workflow not found"));
+        Workflow workflow = workflowService.getWorkflowForCurrentUser(request.getWorkflowId());
 
         String currentData = input;
 
@@ -53,24 +55,6 @@ public class WorkflowEngine {
         context.put("emailEnabled", request.getEmailEnabled());
         context.put("whatsappEnabled", request.getWhatsappEnabled());
 
-
-        /*
-        Task task = taskRepository.findById(request.getTaskId())
-                        .orElse(null);
-
-
-//        if(task == null) {
-//            context.put("taskName", "Default Task");
-//            context.put("description", "No description");
-//            context.put("date", "N/A");
-//        }
-
-        context.put("taskName", task.getTaskName());
-        context.put("description", task.getDescription());
-        context.put("date", task.getTaskDate());
-        context.put("audience", task.getAudience());
-
-        */
 
 
         Task task = null;
@@ -97,29 +81,6 @@ public class WorkflowEngine {
             List<WorkflowNode> nodes =
                     workflowNodeRepository.findByWorkflowOrderBySequenceOrderAsc(workflow);
 
-
-//            for (WorkflowNode node : nodes) {
-//
-//                NodeExecutor executor =
-//                        executorFactory.getExecutor(node.getNodeType());
-//
-//                String inputBeforeNode = currentData;
-//
-//                currentData = executor.execute(currentData, node, context);
-//
-//
-//                NodeExecutionLog log = NodeExecutionLog.builder()
-//                        .workflow(workflow)
-//                        .nodeType(node.getNodeType())
-//                        .status("SUCCESS")
-//                        .inputData(inputBeforeNode)
-//                        .outputData(currentData)
-//                        .executedAt(java.time.LocalDateTime.now())
-//                        .build();
-//
-//                nodeExecutionLogRepository.save(log);
-//
-//            }
 
             ExecutionLog executionLog = ExecutionLog.builder()
                     .workflow(workflow)
@@ -158,16 +119,6 @@ public class WorkflowEngine {
 
             executionLogRepository.save(savedExecution);
 
-//            // SAVE SUCCESS LOG
-//            ExecutionLog log = ExecutionLog.builder()
-//                    .workflow(workflow)
-//                    .inputData(input)
-//                    .outputData(currentData)
-//                    .status("SUCCESS")
-//                    .executedAt(java.time.LocalDateTime.now())
-//                    .build();
-//
-//            executionLogRepository.save(log);
             return currentData;
 
         } catch (Exception  e) {
