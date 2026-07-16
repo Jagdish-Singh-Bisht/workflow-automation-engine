@@ -39,7 +39,8 @@ public class PageController {
     public PageController(WorkflowService workflowService,
                           WorkflowTriggerRepository workflowTriggerRepository,
                           WorkflowRepository workflowRepository,
-                          ExecutionLogRepository executionLogRepository, NodeExecutionLogRepository nodeExecutionLogRepository) {
+                          ExecutionLogRepository executionLogRepository,
+                          NodeExecutionLogRepository nodeExecutionLogRepository) {
 
         this.workflowService = workflowService;
         this.workflowTriggerRepository = workflowTriggerRepository;
@@ -114,7 +115,7 @@ public class PageController {
         model.addAttribute("page", "workflows");
 
         List<Workflow> workflows =
-                workflowService.getAllWorkflows();
+                workflowService.getCurrentUserWorkflows();
 
         Map<Long, Boolean> workflowStatusMap =
                 new HashMap<>();

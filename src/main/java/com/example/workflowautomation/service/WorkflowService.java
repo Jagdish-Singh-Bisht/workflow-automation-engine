@@ -42,7 +42,14 @@ public class WorkflowService {
 
     private final NodeExecutionLogRepository nodeExecutionLogRepository;
 
+    private User getCurrentUser() {
+        Authentication authentication = SecurityContextHolder
+                .getContext().getAuthentication();
 
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+
+        return userDetails.getUser();
+    }
 
     // Create Workflow
     public Workflow createWorkflow(String workflowName) {
@@ -87,12 +94,7 @@ public class WorkflowService {
 
     public Workflow getWorkflowForCurrentUser(Long workflowId) {
 
-        Authentication authentication = SecurityContextHolder
-                .getContext().getAuthentication();
-
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-
-        User currentUser = userDetails.getUser();
+        User currentUser = getCurrentUser();
 
         Workflow workflow = workflowRepository.findById(workflowId)
                 .orElseThrow(() -> new RuntimeException("Workflow not found"));
@@ -105,6 +107,14 @@ public class WorkflowService {
 
         return workflow;
 
+    }
+
+
+    public List<Workflow> getCurrentUserWorkflows() {
+
+        User currentUser = getCurrentUser();
+
+        return workflowRepository.findByUser(currentUser);
     }
 
     // Add Node to Workflow
