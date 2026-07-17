@@ -63,21 +63,20 @@ public class PageController {
     @GetMapping("/dashboard")
     public String dashboard(Model model) {
 
-        long totalWorkflows = workflowRepository.count();
+        long totalWorkflows = workflowService.getCurrentUserWorkflowCount();
 
-        long activeTriggers = workflowTriggerRepository.countByIsActive(true);
+        long activeTriggers = workflowService.getCurrentUserActiveTriggerCount();
 
-        long totalExecutions = executionLogRepository.count();
+        long totalExecutions = workflowService.getCurrentUserExecutionCount();
 
-        ExecutionLog lastExecution = executionLogRepository.findTopByOrderByExecutedAtDesc();
+        ExecutionLog lastExecution = workflowService.getCurrentUserLastExecution();
 
-        List<ExecutionLog> recentExecutions = executionLogRepository
-                .findTop5ByOrderByExecutedAtDesc();
+        List<ExecutionLog> recentExecutions = workflowService.getCurrentUserRecentExecutions();
 
-        long successfulExecutions = executionLogRepository
-                .countByStatus("SUCCESS");
+        long successfulExecutions = workflowService.getCurrentUserSuccessfulExecutionCount
+                ();
 
-        long failedExecutions = executionLogRepository.countByStatus("FAILURE");
+        long failedExecutions = workflowService.getCurrentUserFailedExecutionCount();
 
 
         model.addAttribute("page", "dashboard");

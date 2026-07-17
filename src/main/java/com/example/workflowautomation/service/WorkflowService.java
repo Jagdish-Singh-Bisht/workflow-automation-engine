@@ -6,6 +6,7 @@ import com.example.workflowautomation.exception.WorkflowAccessDeniedException;
 import com.example.workflowautomation.dto.ExecutionLogResponse;
 import com.example.workflowautomation.dto.NodeExecutionLogResponse;
 
+import com.example.workflowautomation.repository.WorkflowTriggerRepository;
 import com.example.workflowautomation.entity.Workflow;
 import com.example.workflowautomation.entity.User;
 import com.example.workflowautomation.entity.WorkflowNode;
@@ -41,6 +42,7 @@ public class WorkflowService {
     private final ExecutionLogRepository executionLogRepository;
 
     private final NodeExecutionLogRepository nodeExecutionLogRepository;
+    private final WorkflowTriggerRepository workflowTriggerRepository;
 
     private User getCurrentUser() {
         Authentication authentication = SecurityContextHolder
@@ -117,6 +119,10 @@ public class WorkflowService {
         return workflowRepository.findByUser(currentUser);
     }
 
+    public long getCurrentUserWorkflowCount() {
+        return getCurrentUserWorkflows().size();
+    }
+
     // Add Node to Workflow
     public WorkflowNode addNode(Long workflowId,
                                 String nodeType,
@@ -166,7 +172,28 @@ public class WorkflowService {
 
     }
 
+    public long getCurrentUserExecutionCount() {
 
+        return executionLogRepository.countByWorkflowUser(getCurrentUser());
+
+    }
+
+    public long getCurrentUserSuccessfulExecutionCount() {
+
+        return executionLogRepository.countByWorkflowUserAndStatus(
+                getCurrentUser(),
+                "SUCCESS"
+        );
+
+    }
+
+    public long getCurrentUserFailedExecutionCount() {
+
+        return executionLogRepository.countByWorkflowUserAndStatus(
+                getCurrentUser(),
+                "FAILED"
+        );
+    }
 
     public List<NodeExecutionLogResponse> getNodeExecutionHistory(Long workflowId) {
 
@@ -183,9 +210,34 @@ public class WorkflowService {
 
     }
 
+    public List<ExecutionLog> getCurrentUserRecentExecutions() {
+
+        return executionLogRepository.findTop5ByWorkflowUserOrderByExecutedAtDesc(getCurrentUser());
+    }
+
+    public ExecutionLog getCurrentUserLastExecution() {
+
+        List<ExecutionLog> recent = getCurrentUserRecentExecutions();
+
+        return recent.isEmpty() ? null : recent.get(0);
+    }
     public List<Workflow> getAllWorkflows() {
         return workflowRepository.findAll();
     }
 
+    public long getCurrentUserActiveTriggerCount() {
+
+        List<Workflow> workflows = getCurrentUserWorkflows();
+
+        List<Long> workflowIds = workflows.stream()
+                .map(Workflow::getId)
+                .toList();
+
+        if(workflowIds.isEmpty()) {
+            return 0;
+        }
+
+        return workflowTriggerRepository.countByWorkflowIdInAndIsActive(workflowIds, true);
+    }
 
 }
