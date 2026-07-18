@@ -149,7 +149,7 @@ public class PageController {
     @GetMapping("/triggers")
     public String triggers(Model model) {
         model.addAttribute("page", "triggers");
-        model.addAttribute("triggers", workflowTriggerRepository.findAll());
+        model.addAttribute("triggers", workflowService.getCurrentUserTriggers());
 
         return "layout";
     }
@@ -263,7 +263,7 @@ public class PageController {
         model.addAttribute("page", "executions");
 
         List<ExecutionLog> logs =
-                executionLogRepository.findTop20ByOrderByExecutedAtDesc();
+                workflowService.getCurrentUserExecutionHistory();
 
         model.addAttribute("logs", logs);
 

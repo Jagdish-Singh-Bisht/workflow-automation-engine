@@ -5,14 +5,13 @@ package com.example.workflowautomation.service;
 import com.example.workflowautomation.exception.WorkflowAccessDeniedException;
 import com.example.workflowautomation.dto.ExecutionLogResponse;
 import com.example.workflowautomation.dto.NodeExecutionLogResponse;
-
-import com.example.workflowautomation.repository.WorkflowTriggerRepository;
+import com.example.workflowautomation.entity.WorkflowTrigger;
 import com.example.workflowautomation.entity.Workflow;
 import com.example.workflowautomation.entity.User;
 import com.example.workflowautomation.entity.WorkflowNode;
 import com.example.workflowautomation.entity.ExecutionLog;
 import com.example.workflowautomation.entity.NodeExecutionLog;
-
+import com.example.workflowautomation.repository.WorkflowTriggerRepository;
 import com.example.workflowautomation.repository.WorkflowRepository;
 import com.example.workflowautomation.repository.UserRepository;
 import com.example.workflowautomation.repository.WorkflowNodeRepository;
@@ -27,7 +26,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+//import org.springframework.security.core.context.SecurityContextHolder;
 import com.example.workflowautomation.security.CustomUserDetails;
 
 
@@ -238,6 +237,28 @@ public class WorkflowService {
         }
 
         return workflowTriggerRepository.countByWorkflowIdInAndIsActive(workflowIds, true);
+    }
+
+    // Execution Log History
+    public List<ExecutionLog> getCurrentUserExecutionHistory() {
+
+        return executionLogRepository.findTop20ByWorkflowUserOrderByExecutedAtDesc(getCurrentUser());
+
+    }
+
+    public List<WorkflowTrigger> getCurrentUserTriggers() {
+
+        List<Workflow> workflows = getCurrentUserWorkflows();
+
+        List<Long> workflowIds = workflows.stream()
+                .map(Workflow::getId)
+                .toList();
+
+        if(workflowIds.isEmpty()) {
+            return List.of();
+        }
+
+        return workflowTriggerRepository.findByWorkflowIdIn(workflowIds);
     }
 
 }
