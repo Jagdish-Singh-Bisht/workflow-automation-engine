@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+
+<body>
+
+    <div th:fragment="content">
+
+        <div class="container-fluid">
+
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>Users</h2>
+            </div>
+
+            <div class="card">
+
+                <div class="card-header">
+                    <h5 class="mb-0">Registered Users</h5>
+                </div>
+
+                <div class="card-body">
+
+                    <div th:if="${success}"
+                         class="alert alert-success"
+                         th:text="${success}">
+
+                    </div>
+
+                    <div th:if="${error}"
+                         class="alert alert-danger"
+                         th:text="${error}">
+
+                    </div>
+
+                    <table class="table table-bordered table-hover">
+
+                        <thead class="table-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>Username</th>
+                            <th>Role</th>
+                            <th>Created At</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+
+                            <tr th:each="user : ${users}">
+
+                                <td th:text="${user.id}"></td>
+                                <td th:text="${user.username}"></td>
+
+                                <td>
+                                    <span class="badge bg-primary"
+                                          th:text="${user.role}">
+                                    </span>
+                                </td>
+
+                                <td th:text="${#temporals.format(user.createdAt, 'dd MMM yyyy HH:mm')}"></td>
+                                <!-- <td th:text="${user.createdAt}"></td>  -->
+
+                                <td>
+                                    <a class="btn btn-danger btn-sm"
+                                       th:href="@{/admin/users/delete/{id}(id=${user.id})}">
+                                        Delete
+                                    </a>
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

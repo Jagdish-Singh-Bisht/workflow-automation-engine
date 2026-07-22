@@ -13,11 +13,10 @@ import com.example.workflowautomation.entity.WorkflowTrigger;
 
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
+
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.HashMap;
 import java.util.List;
@@ -385,6 +384,13 @@ public class PageController {
 
         return "redirect:/triggers";
 
+    }
+
+    @GetMapping("/admin-test")
+    @PreAuthorize("hasRole('ADMIN')")  // Only accessible to users with ADMIN role (before executing this method)
+    @ResponseBody
+    public String adminTest() {
+        return "Welcome Admin!";
     }
 
 }

@@ -43,7 +43,7 @@ public class WorkflowService {
     private final NodeExecutionLogRepository nodeExecutionLogRepository;
     private final WorkflowTriggerRepository workflowTriggerRepository;
 
-    private User getCurrentUser() {
+    public User getCurrentUser() {
         Authentication authentication = SecurityContextHolder
                 .getContext().getAuthentication();
 

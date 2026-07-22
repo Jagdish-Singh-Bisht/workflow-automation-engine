@@ -92,6 +92,10 @@
             <div th:replace="trigger-create :: content"></div>
         </th:block>
 
+        <th:block th:if="${page == 'admin-users'}">
+            <div th:replace="admin-users :: content"></div>
+        </th:block>
+
     </div>
 
 </div>
