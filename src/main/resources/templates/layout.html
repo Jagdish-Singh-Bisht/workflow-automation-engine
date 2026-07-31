@@ -23,30 +23,54 @@
 
             <li class="nav-item">
                 <a class="nav-link text-white"
-                   href="/dashboard">
+                   th:href="@{/dashboard}">
                     Dashboard
                 </a>
             </li>
 
             <li class="nav-item">
                 <a class="nav-link text-white"
-                   href="/workflows">
+                   th:href="@{/workflows}">
                     Workflows
                 </a>
             </li>
 
             <li class="nav-item">
                 <a class="nav-link text-white"
-                   href="/triggers">
+                   th:href="@{/triggers}">
                     Triggers
                 </a>
             </li>
 
             <li class="nav-item">
                 <a class="nav-link text-white"
-                   href="/executions">
+                   th:href="@{/executions}">
                     Executions
                 </a>
+            </li>
+
+            <hr>
+
+            <li class="nav-item">
+                <a class="nav-link text-white"
+                   th:href="@{/profile}">
+                    Profile
+                </a>
+            </li>
+
+            <hr>
+
+            <li class="nav-item mt-2">
+
+                <form th:Action="@{/logout}" method="post">
+
+                    <button type="submit"
+                            class="btn btn-danger w-100">
+                        Logout
+                    </button>
+
+                </form>
+
             </li>
 
         </ul>
@@ -94,6 +118,14 @@
 
         <th:block th:if="${page == 'admin-users'}">
             <div th:replace="admin-users :: content"></div>
+        </th:block>
+
+        <th:block th:if="${page == 'profile'}">
+            <div th:replace="profile :: content"></div>
+        </th:block>
+
+        <th:block th:if="${page == 'change-password'}">
+            <div th:replace="change-password :: content"></div>
         </th:block>
 
     </div>

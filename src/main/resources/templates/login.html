@@ -34,6 +34,20 @@
 
     </form>
 
+    <div th:if="${param.error}"
+         class="alert alert-danger">
+
+        Invalid username or password.
+
+    </div>
+
+    <div th:if="${param.logout}"
+         class="alert alert-success">
+
+        You have been logged out successfully.
+
+    </div>
+
 </body>
 
 </html>

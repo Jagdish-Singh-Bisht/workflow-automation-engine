@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Profile</title>
+</head>
+
+<body>
+
+    <div th:fragment="content">
+
+        <div class="container mt-4">
+
+            <h2>My Profile</h2>
+
+            <table class="table table-bordered">
+
+                <tr>
+                    <th>Username</th>
+                    <td th:text="${user.username}"></td>
+                </tr>
+
+                <tr>
+                    <th>Role</th>
+                    <td th:text="${user.role}"></td>
+                </tr>
+
+                <tr>
+                    <th>Created At</th>
+                    <td th:text="${#temporals.format(user.createdAt, 'dd MMM yyyy HH:mm')}"></td>
+                </tr>
+
+            </table>
+
+            <a th:href="@{/profile/change-password}"
+               class="btn btn-primary">
+                Change Password
+            </a>
+
+
+        </div>
+
+    </div>
+
+
+</body>
+</html>
