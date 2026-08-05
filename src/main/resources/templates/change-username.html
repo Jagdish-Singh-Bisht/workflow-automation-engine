@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Change Username</title>
+</head>
+
+<body>
+
+  <div th:fragment="content" class="container mt-4">
+
+    <div th:if="${success}" class="alert alert-success">
+      <span th:text="${success}"></span>
+    </div>
+
+    <div th:f="${error}" class="alert alert-danger">
+      <span th:text="${error}"></span>
+    </div>
+
+    <h2>Change Username</h2>
+
+    <form th:action="@{/profile/change-username}"
+          th:object="${changeUsernameRequest}"
+          method="post">
+
+      <div class="mb-3">
+        <label>Current Password</label>
+        <input type="password"
+               th:field="*{currentPassword}"
+               class="form-control">
+      </div>
+
+      <div class="mb-3">
+        <label>New Username</label>
+        <input type="text"
+               th:field="*{newUsername}"
+               class="form-control">
+      </div>
+
+      <button class="btn btn-warning">
+        Change Username
+      </button>
+
+    </form>
+
+  </div>
+
+
+</body>
+
+</html>

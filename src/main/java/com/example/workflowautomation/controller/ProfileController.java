@@ -3,6 +3,7 @@ package com.example.workflowautomation.controller;
 
 
 import com.example.workflowautomation.dto.ChangePasswordRequest;
+import com.example.workflowautomation.dto.ChangeUsernameRequest;
 import com.example.workflowautomation.service.ProfileService;
 import com.example.workflowautomation.entity.User;
 import com.example.workflowautomation.service.WorkflowService;
@@ -71,6 +72,40 @@ public class ProfileController {
 
         return "redirect:/profile/change-password";
 
+    }
+
+    @GetMapping("/change-username")
+    public String changeUsernamePage(Model model) {
+
+        model.addAttribute("changeUsernameRequest",
+                new ChangeUsernameRequest()
+        );
+
+        model.addAttribute("page", "change-username");
+
+        return "layout";
+    }
+
+    @PostMapping("/change-username")
+    public String changeUsername(@ModelAttribute ChangeUsernameRequest request,
+                                 RedirectAttributes redirectAttributes) {
+
+        try {
+            profileService.changeUsername(request);
+
+            redirectAttributes.addFlashAttribute(
+                    "success",
+                    "username changed successfully"
+            );
+
+        } catch (RuntimeException ex) {
+            redirectAttributes.addFlashAttribute(
+                    "error",
+                    ex.getMessage()
+            );
+        }
+
+        return "redirect:/profile/change-username";
     }
 
 }

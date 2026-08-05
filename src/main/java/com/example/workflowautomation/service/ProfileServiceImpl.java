@@ -1,9 +1,11 @@
 package com.example.workflowautomation.service;
 
 
+
 import com.example.workflowautomation.entity.User;
 import com.example.workflowautomation.repository.UserRepository;
 import com.example.workflowautomation.dto.ChangePasswordRequest;
+import com.example.workflowautomation.dto.ChangeUsernameRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -55,6 +57,43 @@ public class ProfileServiceImpl implements ProfileService{
 
         userRepository.save(currentUser);
 
+
+    }
+
+    @Override
+    public void changeUsername(ChangeUsernameRequest request) {
+
+        User currentUser = workflowService.getCurrentUser();
+
+        if(!passwordEncoder.matches(
+                request.getCurrentPassword(),
+                currentUser.getPassword())) {
+
+            throw new RuntimeException("Current password is incorrect");
+        }
+
+        if(request.getNewUsername() == null ||
+        request.getNewUsername().trim().isEmpty()) {
+
+            throw new RuntimeException("Username cannot be empty");
+        }
+
+        if(currentUser.getUsername()
+                .equals(request.getNewUsername()) ) {
+
+            throw new RuntimeException("New Username must be different");
+        }
+
+        if(userRepository.findByUsername(
+                request.getNewUsername())
+                .isPresent()) {
+
+            throw new RuntimeException("Username already exists");
+        }
+
+        currentUser.setUsername(request.getNewUsername());
+
+        userRepository.save(currentUser);
 
     }
 }
