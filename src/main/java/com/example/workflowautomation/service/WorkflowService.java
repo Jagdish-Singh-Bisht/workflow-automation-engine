@@ -18,6 +18,8 @@ import com.example.workflowautomation.repository.WorkflowNodeRepository;
 import com.example.workflowautomation.repository.ExecutionLogRepository;
 import com.example.workflowautomation.repository.NodeExecutionLogRepository;
 
+//import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -259,6 +261,52 @@ public class WorkflowService {
         }
 
         return workflowTriggerRepository.findByWorkflowIdIn(workflowIds);
+    }
+
+    @Transactional
+    public void deleteWorkflow(Long workflowId) {
+
+        Workflow workflow = getWorkflowForCurrentUser(workflowId);
+
+        deleteWorkflowData(workflow);
+
+    }
+
+    @Transactional
+    public void deleteWorkflowAsAdmin(Long workflowId) {
+
+        Workflow workflow = workflowRepository.findById(workflowId)
+                .orElseThrow(() -> new RuntimeException("Workflow not found"));
+
+        deleteWorkflowData(workflow);
+
+    }
+
+    private void deleteWorkflowData(Workflow workflow) {
+
+        Long workflowId = workflow.getId();
+
+        // 1. Get all execution logs of this workflow
+        List<ExecutionLog> executionLogs =
+                executionLogRepository.findByWorkflowIdOrderByExecutedAtDesc(workflowId);
+
+        // 2. Delete node execution logs first
+        for(ExecutionLog executionLog : executionLogs) {
+            nodeExecutionLogRepository.deleteByExecutionLogId(executionLog.getId());
+        }
+
+        // 3. Delete execution logs
+        executionLogRepository.deleteByWorkflowId(workflowId);
+
+        // 4. Delete workflow nodes
+        workflowNodeRepository.deleteByWorkflow(workflow);
+
+        // 5. Delete workflow trigger
+        workflowTriggerRepository.deleteByWorkflowId(workflowId);
+
+        // 6. Delete workflow
+        workflowRepository.delete(workflow);
+
     }
 
 }

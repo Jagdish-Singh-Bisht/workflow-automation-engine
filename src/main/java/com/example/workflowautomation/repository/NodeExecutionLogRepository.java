@@ -13,4 +13,6 @@ public interface NodeExecutionLogRepository extends JpaRepository<NodeExecutionL
 
     List<NodeExecutionLog> findByExecutionLogIdOrderByExecutedAtDesc(Long executionLogId);
 
+    void deleteByExecutionLogId(Long executionLogId);
+
 }

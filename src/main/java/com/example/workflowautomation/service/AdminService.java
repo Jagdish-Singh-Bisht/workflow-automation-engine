@@ -1,11 +1,13 @@
 package com.example.workflowautomation.service;
 
 
+import com.example.workflowautomation.entity.Workflow;
 import com.example.workflowautomation.entity.User;
 import com.example.workflowautomation.repository.UserRepository;
 import com.example.workflowautomation.service.WorkflowService;
 import com.example.workflowautomation.repository.WorkflowRepository;
 
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import java.util.List;
@@ -33,13 +35,14 @@ public class AdminService {
      */
 
 
-    private void validateWorkflowOwnership(User user) {
+//    private void validateWorkflowOwnership(User user) {
+//
+//        if(workflowRepository.existsByUser(user)) {
+//            throw new RuntimeException("Cannot delete user because they own workflow. \n Transfer or delete their workflows first.");
+//        }
+//    }
 
-        if(workflowRepository.existsByUser(user)) {
-            throw new RuntimeException("Cannot delete user because they own workflow. \n Transfer or delete their workflows first.");
-        }
-    }
-
+    @Transactional
     public void deleteUser(Long id){
 
         User user = userRepository.findById(id)
@@ -61,7 +64,14 @@ public class AdminService {
             }
         }
 
-        validateWorkflowOwnership(user);
+//        validateWorkflowOwnership(user);
+//        userRepository.delete(user);
+
+        List<Workflow> workflows = workflowRepository.findByUser(user);
+
+        for(Workflow workflow : workflows) {
+            workflowService.deleteWorkflowAsAdmin(workflow.getId());
+        }
 
         userRepository.delete(user);
 

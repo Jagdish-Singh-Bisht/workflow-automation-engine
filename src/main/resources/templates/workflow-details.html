@@ -89,6 +89,14 @@
             View Executions
         </a>
 
+        <a th:href="@{/workflows/{id}/delete(id=${workflow.id})}"
+           class="btn btn-danger"
+            onclick="return confirm('Are you sure you want to delete this workflow?')">
+
+            Delete Workflow
+
+        </a>
+
         <hr>
 
         <h4 class="mt-4">Recent Executions</h4>

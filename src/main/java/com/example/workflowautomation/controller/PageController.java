@@ -11,7 +11,7 @@ import com.example.workflowautomation.service.WorkflowService;
 import com.example.workflowautomation.repository.WorkflowTriggerRepository;
 import com.example.workflowautomation.entity.WorkflowTrigger;
 
-
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
@@ -275,8 +275,11 @@ public class PageController {
     @GetMapping("/workflows/{id}")
     public String workflowDetails(@PathVariable Long id, Model model) {
 
-        Workflow workflow = workflowRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Workflow not found"));
+//        Workflow workflow = workflowRepository.findById(id)
+//                .orElseThrow(() -> new RuntimeException("Workflow not found"));
+
+        // replace with this
+        Workflow workflow = workflowService.getWorkflowForCurrentUser(id);
 
         WorkflowTrigger trigger = workflowTriggerRepository.findByWorkflowId(id)
                 .orElse(null);
@@ -392,5 +395,37 @@ public class PageController {
     public String adminTest() {
         return "Welcome Admin!";
     }
+
+    @GetMapping("/workflows/{id}/delete")
+    public String deleteWorkflow(@PathVariable Long id,
+                                 RedirectAttributes redirectAttributes) {
+
+        System.out.println("Delete Endpoint Called: " + id);
+
+        try {
+            workflowService.deleteWorkflow(id);
+
+            System.out.println("Delete Service Completed");
+
+            redirectAttributes.addFlashAttribute(
+                    "success",
+                    "Workflow deleted successfully"
+            );
+
+        } catch (RuntimeException ex) {
+
+            System.out.println("Delete Failed: " + ex.getMessage());
+
+            redirectAttributes.addFlashAttribute(
+                    "error",
+                    ex.getMessage()
+            );
+        }
+
+        return "redirect:/workflows";
+
+    }
+
+
 
 }

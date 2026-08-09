@@ -20,4 +20,6 @@ public interface WorkflowTriggerRepository extends JpaRepository<WorkflowTrigger
 
     List<WorkflowTrigger> findByWorkflowIdIn(List<Long> workflowIds);
 
+    void deleteByWorkflowId(Long workflowId);
+
 }

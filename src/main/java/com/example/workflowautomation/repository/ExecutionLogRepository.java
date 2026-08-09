@@ -31,4 +31,6 @@ public interface ExecutionLogRepository extends JpaRepository<ExecutionLog, Long
 
     long countByWorkflowUserAndStatus(User user, String status);
 
+    void deleteByWorkflowId(Long workflowId);
+
 }
