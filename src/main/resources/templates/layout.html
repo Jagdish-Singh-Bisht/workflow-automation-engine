@@ -132,6 +132,10 @@
             <div th:replace="change-username :: content"></div>
         </th:block>
 
+        <th:block th:if="${page == 'credentials'}">
+            <div th:replace="credentials :: content"></div>
+        </th:block>
+
     </div>
 
 </div>
