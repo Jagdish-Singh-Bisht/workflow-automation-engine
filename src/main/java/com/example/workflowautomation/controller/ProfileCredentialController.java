@@ -7,6 +7,9 @@ import com.example.workflowautomation.service.UserCredentialService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.ui.Model;
 
 import lombok.RequiredArgsConstructor;
@@ -27,7 +30,11 @@ public class ProfileCredentialController {
         List<UserCredential> credentials =
                 userCredentialService.getCurrentUserCredentials();
 
+        boolean geminiConfigured =
+                userCredentialService.hasCredential("GEMINI");
+
         model.addAttribute("credentials", credentials);
+        model.addAttribute("geminiConfigured", geminiConfigured);
         model.addAttribute("page", "credentials");
 
         return "layout";
@@ -35,5 +42,49 @@ public class ProfileCredentialController {
     }
 
 
+    @GetMapping("/gemini")
+    public String gemini(Model model) {
+
+        boolean geminiConfigured =
+                userCredentialService.hasCredential("GEMINI");
+
+        model.addAttribute("geminiConfigured", geminiConfigured);
+
+        return "gemini-credentials";
+
+    }
+
+    @PostMapping("/gemini")
+    public String saveGemini(@RequestParam String credentialValue,
+                             RedirectAttributes redirectAttributes) {
+
+        userCredentialService.saveCredential(
+                "GEMINI",
+                "API_KEY",
+                credentialValue
+        );
+
+        redirectAttributes.addFlashAttribute(
+                "success",
+                "Gemini API Key saved successfully."
+        );
+
+        return "redirect:/profile/credentials";
+
+    }
+
+    @PostMapping("/gemini/delete")
+    public String deleteGemini(RedirectAttributes redirectAttributes) {
+
+        userCredentialService.deleteCredential("GEMINI");
+
+        redirectAttributes.addFlashAttribute(
+                "success",
+                "Gemini credentials removed successfully."
+        );
+
+        return "redirect:/profile/credentials";
+
+    }
 
 }

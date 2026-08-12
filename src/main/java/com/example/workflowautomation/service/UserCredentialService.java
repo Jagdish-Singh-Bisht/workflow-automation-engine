@@ -2,12 +2,12 @@ package com.example.workflowautomation.service;
 
 
 import com.example.workflowautomation.entity.User;
-//import com.example.workflowautomation.service.WorkflowService;
 import com.example.workflowautomation.entity.UserCredential;
 import com.example.workflowautomation.repository.UserCredentialRepository;
 
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.time.LocalDateTime;
@@ -74,6 +74,29 @@ public class UserCredentialService {
         return userCredentialRepository.save(credential);
 
     }
+
+    public boolean hasCredential(String provider) {
+
+        User currentUser = workflowService.getCurrentUser();
+
+        return userCredentialRepository
+                .findByUserAndProvider(currentUser, provider)
+                .isPresent();
+
+    }
+
+    @Transactional
+    public void deleteCredential(String provider) {
+
+        User currentUser = workflowService.getCurrentUser();
+
+        userCredentialRepository.deleteByUserAndProvider(
+                currentUser,
+                provider
+        );
+
+    }
+
 
 
 }
