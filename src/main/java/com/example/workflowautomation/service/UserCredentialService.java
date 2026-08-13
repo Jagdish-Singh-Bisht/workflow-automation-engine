@@ -54,7 +54,11 @@ public class UserCredentialService {
                 credentialEncryptionService.encrypt(credentialValue);
 
         UserCredential credential = userCredentialRepository
-                .findByUserAndProvider(currentUser, provider)
+                .findByUserAndProviderAndCredentialType(
+                        currentUser,
+                        provider,
+                        credentialType
+                )
                 .orElse(
                         UserCredential.builder()
                                 .user(currentUser)
@@ -94,6 +98,43 @@ public class UserCredentialService {
                 currentUser,
                 provider
         );
+
+    }
+
+    public boolean hasEmailCredential() {
+
+        User currentUser = workflowService.getCurrentUser();
+
+        return userCredentialRepository
+                .findByUserAndProviderAndCredentialType(
+                        currentUser,
+                        "EMAIL",
+                        "USERNAME"
+                )
+                .isPresent()
+                &&
+                userCredentialRepository
+                        .findByUserAndProviderAndCredentialType(
+                                currentUser,
+                                "EMAIL",
+                                "APP_PASSWORD"
+                        )
+                        .isPresent();
+
+    }
+
+    @Transactional
+    public void deleteEmailCredentials() {
+
+        User currentUser = workflowService.getCurrentUser();
+
+        List<UserCredential> credentials =
+                userCredentialRepository.findByUser(currentUser);
+
+        credentials.stream()
+                .filter(credential ->
+                        "EMAIL".equals(credential.getProvider()))
+                .forEach(userCredentialRepository::delete);
 
     }
 

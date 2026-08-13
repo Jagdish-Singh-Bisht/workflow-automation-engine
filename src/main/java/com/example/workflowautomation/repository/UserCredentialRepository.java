@@ -20,4 +20,9 @@ public interface UserCredentialRepository extends JpaRepository<UserCredential, 
 //    @Transactional
     void deleteByUserAndProvider(User user, String provider);
 
+    Optional<UserCredential> findByUserAndProviderAndCredentialType(User user, String provider, String credentialType);
+
+//    void deleteByUserAndProviderAndCredentialType(User user, String provider, String credentialType);
+
+
 }

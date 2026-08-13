@@ -33,8 +33,12 @@ public class ProfileCredentialController {
         boolean geminiConfigured =
                 userCredentialService.hasCredential("GEMINI");
 
+        boolean emailConfigured =
+                userCredentialService.hasEmailCredential();
+
         model.addAttribute("credentials", credentials);
         model.addAttribute("geminiConfigured", geminiConfigured);
+        model.addAttribute("emailConfigured", emailConfigured);
         model.addAttribute("page", "credentials");
 
         return "layout";
@@ -81,6 +85,57 @@ public class ProfileCredentialController {
         redirectAttributes.addFlashAttribute(
                 "success",
                 "Gemini credentials removed successfully."
+        );
+
+        return "redirect:/profile/credentials";
+
+    }
+
+    @GetMapping("/email")
+    public String email(Model model) {
+
+        boolean emailConfigured =
+                userCredentialService.hasEmailCredential();
+
+        model.addAttribute("emailConfigured", emailConfigured);
+
+        return "email-credentials";
+    }
+
+    @PostMapping("/email")
+    public String saveEmail(@RequestParam String emailUsername,
+                            @RequestParam String appPassword,
+                            RedirectAttributes redirectAttributes) {
+
+        userCredentialService.saveCredential(
+                "EMAIL",
+                "USERNAME",
+                emailUsername
+        );
+
+        userCredentialService.saveCredential(
+                "EMAIL",
+                "APP_PASSWORD",
+                appPassword
+        );
+
+        redirectAttributes.addFlashAttribute(
+                "success",
+                "Email credentials saved successfully."
+        );
+
+        return "redirect:/profile/credentials";
+
+    }
+
+    @PostMapping("/email/delete")
+    public String deleteEmail(RedirectAttributes redirectAttributes) {
+
+        userCredentialService.deleteEmailCredentials();
+
+        redirectAttributes.addFlashAttribute(
+                "success",
+                "Email credentials deleted successfully."
         );
 
         return "redirect:/profile/credentials";
