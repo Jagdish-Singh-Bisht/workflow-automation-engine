@@ -138,6 +138,43 @@ public class UserCredentialService {
 
     }
 
+    public boolean hasTwilioCredential() {
+
+        User currentUser = workflowService.getCurrentUser();
+
+        return userCredentialRepository
+                .findByUserAndProviderAndCredentialType(
+                        currentUser,
+                        "TWILIO",
+                        "ACCOUNT_SID"
+                )
+                .isPresent()
+                &&
+                userCredentialRepository
+                        .findByUserAndProviderAndCredentialType(
+                                currentUser,
+                                "TWILIO",
+                                "AUTH_TOKEN"
+                        )
+                        .isPresent();
+
+    }
+
+    @Transactional
+    public void deleteTwilioCredentials() {
+
+        User currentUser = workflowService.getCurrentUser();
+
+        List<UserCredential> credentials =
+                userCredentialRepository.findByUser(currentUser);
+
+        credentials.stream()
+                .filter(credential ->
+                        "TWILIO".equals(credential.getProvider()))
+                .forEach(userCredentialRepository::delete);
+
+    }
+
 
 
 }

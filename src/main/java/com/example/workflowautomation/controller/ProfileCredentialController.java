@@ -36,9 +36,13 @@ public class ProfileCredentialController {
         boolean emailConfigured =
                 userCredentialService.hasEmailCredential();
 
+        boolean twilioConfigured =
+                userCredentialService.hasTwilioCredential();
+
         model.addAttribute("credentials", credentials);
         model.addAttribute("geminiConfigured", geminiConfigured);
         model.addAttribute("emailConfigured", emailConfigured);
+        model.addAttribute("twilioConfigured", twilioConfigured);
         model.addAttribute("page", "credentials");
 
         return "layout";
@@ -141,5 +145,61 @@ public class ProfileCredentialController {
         return "redirect:/profile/credentials";
 
     }
+
+    @GetMapping("/whatsapp")
+    public String whatsapp(Model model) {
+
+        boolean twilioConfigured =
+                userCredentialService.hasTwilioCredential();
+
+        model.addAttribute("twilioConfigured", twilioConfigured);
+
+        return "whatsapp-credentials";
+
+    }
+
+
+    @PostMapping("/whatsapp")
+    public String saveWhatsapp(
+            @RequestParam String accountSid,
+            @RequestParam String authToken,
+            RedirectAttributes redirectAttributes) {
+
+        userCredentialService.saveCredential(
+                "TWILIO",
+                "ACCOUNT_SID",
+                accountSid
+        );
+
+        userCredentialService.saveCredential(
+                "TWILIO",
+                "AUTH_TOKEN",
+                authToken
+        );
+
+        redirectAttributes.addFlashAttribute(
+                "success",
+                "WhatsApp credentials saved successfully."
+        );
+
+        return "redirect:/profile/credentials";
+
+    }
+
+    @PostMapping("/whatsapp/delete")
+    public String deleteWhatsapp(RedirectAttributes redirectAttributes) {
+
+        userCredentialService.deleteTwilioCredentials();
+
+        redirectAttributes.addFlashAttribute(
+                "success",
+                "WhatsApp credentials removed successfully."
+        );
+
+        return "redirect:/profile/credentials";
+
+    }
+
+
 
 }
