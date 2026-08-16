@@ -175,6 +175,34 @@ public class UserCredentialService {
 
     }
 
+    public String getDecryptedCredential(User user,
+                                         String provider,
+                                         String credentialType ) {
+
+        UserCredential credential =
+                userCredentialRepository
+                        .findByUserAndProviderAndCredentialType(
+                                user,
+                                provider,
+                                credentialType
+                        )
+                        .orElseThrow(() -> new RuntimeException(
+                                "Credential not configured: "
+                                        + provider
+                                        + " / "
+                                        + credentialType
+                                )
+                        );
+
+        return credentialEncryptionService.decrypt(
+                credential.getEncryptedValue()
+        );
+
+    }
+
+
+
+
 
 
 }

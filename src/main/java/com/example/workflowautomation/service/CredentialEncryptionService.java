@@ -29,7 +29,7 @@ public class CredentialEncryptionService {
 
         if(secret == null || secret.length() != 32) {
             throw new IllegalArgumentException(
-                    "CREDENTIAL_ENCR  YPTION_KEY must be exactly 32 characters"
+                    "CREDENTIAL_ENCRYPTION_KEY must be exactly 32 characters"
             );
         }
 

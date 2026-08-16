@@ -37,7 +37,7 @@ public class WhatsappWebhookHandler implements WebhookHandler {
             return;
         }
 
-        System.out.println("Incoming Whatsapp: " + message);
+        System.out.println("Incoming WhatsApp: " + message);
 
         String intent = aiService.detectIntent(message);
 
@@ -50,7 +50,8 @@ public class WhatsappWebhookHandler implements WebhookHandler {
             reply = "feature not implemented yet";
         } else {
             // Gemini AI fallback
-            reply = aiService.generateResponse(message);
+//            reply = aiService.generateResponse(message);
+            reply = "AI response through WhatsApp is temporarily unavailable.";
         }
 
         whatsAppService.sendWhatsapp(reply);

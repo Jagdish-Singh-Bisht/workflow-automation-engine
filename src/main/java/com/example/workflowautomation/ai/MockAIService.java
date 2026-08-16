@@ -2,14 +2,14 @@ package com.example.workflowautomation.ai;
 
 
 import org.springframework.stereotype.Service;
-
+import com.example.workflowautomation.entity.User;
 
 
 //@Service
 public class MockAIService implements AIService {
 
     @Override
-    public String generateResponse(String input) {
+    public String generateResponse(String input, User user) {
 
         // Generic dynamic template (works for any input)
         return """

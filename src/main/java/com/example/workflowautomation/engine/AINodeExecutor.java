@@ -1,5 +1,7 @@
 package com.example.workflowautomation.engine;
 
+
+import com.example.workflowautomation.entity.User;
 import com.example.workflowautomation.processor.ShipmentProcessor;
 import com.example.workflowautomation.entity.Shipment;
 import com.example.workflowautomation.ai.AIService;
@@ -24,6 +26,8 @@ public class AINodeExecutor implements NodeExecutor {
 
     @Override
     public String execute(String input, WorkflowNode node, Map<String, Object> context) {
+
+        User workflowOwner = (User) context.get("user");
 
         // 1. Get data (generic)
         Object dataObj = context.get("data");
@@ -81,7 +85,7 @@ public class AINodeExecutor implements NodeExecutor {
         // 6. Call AI
         try {
 //            System.out.println(finalPrompt);
-            return aiService.generateResponse(finalPrompt);
+            return aiService.generateResponse(finalPrompt, workflowOwner);
         } catch (Exception e) {
             e.printStackTrace();
             return data; // fallback

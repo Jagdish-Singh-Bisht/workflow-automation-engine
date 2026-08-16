@@ -1,6 +1,10 @@
 package com.example.workflowautomation.ai;
 
 
+
+import com.example.workflowautomation.entity.User;
+import com.example.workflowautomation.service.UserCredentialService;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -10,22 +14,34 @@ import org.springframework.http.HttpEntity;
 
 import java.util.List;
 import java.util.Map;
+import lombok.RequiredArgsConstructor;
 
 
 @Service
+@RequiredArgsConstructor
 public class GeminiAIService implements AIService {
 
 
-    @Value("${gemini.api.key}")
-    private String apiKey;
+    private final UserCredentialService userCredentialService;
+
+
+//    @Value("${gemini.api.key}")
+//    private String apiKey;
 
     private final RestTemplate restTemplate = new RestTemplate();
 
 
     @Override
-    public String generateResponse(String input) {
+    public String generateResponse(String input, User user) {
 
-        String url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" + apiKey;
+        String apiKey =
+                userCredentialService.getDecryptedCredential(
+                        user,
+                        "GEMINI",
+                        "API_KEY"
+                );
+
+        String url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=" + apiKey;
 
         Map<String, Object> request = Map.of(
                 "contents", List.of(
