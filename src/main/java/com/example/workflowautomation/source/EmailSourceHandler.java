@@ -1,8 +1,10 @@
 package com.example.workflowautomation.source;
 
 
+import com.example.workflowautomation.entity.User;
 import com.example.workflowautomation.entity.ProcessedEmail;
 import com.example.workflowautomation.repository.ProcessedEmailRepository;
+import com.example.workflowautomation.service.UserCredentialService;
 
 import jakarta.mail.Session;
 import jakarta.mail.Store;
@@ -26,10 +28,16 @@ import java.util.Properties;
 public class EmailSourceHandler implements SourceHandler {
 
     private final ProcessedEmailRepository processedEmailRepository;
+    private final UserCredentialService userCredentialService;
 
-    public EmailSourceHandler(ProcessedEmailRepository processedEmailRepository) {
+
+    public EmailSourceHandler(ProcessedEmailRepository processedEmailRepository,
+                              UserCredentialService userCredentialService ) {
+
         this.processedEmailRepository = processedEmailRepository;
+        this.userCredentialService = userCredentialService;
     }
+
 
 
     @Value("${mail.imap.host}")
@@ -38,22 +46,43 @@ public class EmailSourceHandler implements SourceHandler {
     @Value("${mail.imap.port}")
     private String port;
 
+    /*
+
     @Value("${MAIL_USERNAME}")
     private String username;
 
     @Value("${MAIL_APP_PASSWORD}")
     private String password;
 
+     */
+
     @Override
     public void fetch(Map<String, Object> context) {
 
-        try {
-            Properties props = new Properties();
-            props.put("mail.store.protocol", "imaps");
 
-            Session session = Session.getDefaultInstance(props);
+        try {
+
+            User workflowOwner = (User) context.get("user");
+
+            String username = userCredentialService.getDecryptedCredential(
+                    workflowOwner,
+                    "EMAIL",
+                    "USERNAME"
+            );
+
+            String password = userCredentialService.getDecryptedCredential(
+                    workflowOwner,
+                    "EMAIL",
+                    "APP_PASSWORD"
+            );
+
+            Properties properties = new Properties();
+            properties.put("mail.store.protoco", "imaps");
+
+            Session session = Session.getDefaultInstance(properties);
 
             Store store = session.getStore("imaps");
+
             store.connect(host, username, password);
 
             Folder inbox = store.getFolder("INBOX");

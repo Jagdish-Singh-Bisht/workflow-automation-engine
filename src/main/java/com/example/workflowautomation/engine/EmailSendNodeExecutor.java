@@ -2,6 +2,7 @@ package com.example.workflowautomation.engine;
 
 
 
+import com.example.workflowautomation.entity.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.example.workflowautomation.entity.WorkflowNode;
 import com.example.workflowautomation.service.EmailService;
@@ -24,12 +25,16 @@ public class EmailSendNodeExecutor implements NodeExecutor{
 
 
     @Override
-    public String execute(String input, WorkflowNode node, Map<String, Object> context) {
+    public String execute(String input,
+                          WorkflowNode node,
+                          Map<String, Object> context) {
 
 //        String to = (String) context.get("email");
 //        if (to == null) {
 //            to = "jbisht526@gmail.com";
 //        }
+
+        User workflowOwner = (User) context.get("user");
 
         Object emailsObj = context.get("emails");
 
@@ -82,7 +87,11 @@ public class EmailSendNodeExecutor implements NodeExecutor{
 
         for(String to : emails) {
             System.out.println("Sending to: " + to);
-            emailService.sendEmail(to, subject, input);
+            emailService.sendEmail(
+                    workflowOwner,
+                    to,
+                    subject,
+                    input);
         }
 
         return "EMAIL SENT SUCCESSFULLY\n\n" + input;

@@ -1,6 +1,8 @@
 package com.example.workflowautomation.engine;
 
 
+
+import com.example.workflowautomation.entity.User;
 import com.example.workflowautomation.entity.WorkflowNode;
 import com.example.workflowautomation.service.EmailService;
 import com.example.workflowautomation.service.WhatsAppService;
@@ -25,6 +27,10 @@ public class OutputNodeExecutor implements NodeExecutor{
     @Override
     public String execute(String input, WorkflowNode node, Map<String, Object> context) {
 
+        User workflowOwner = (User) context.get("user");
+
+
+
         Boolean emailEnabled = (Boolean)
                 context.get("emailEnabled");
 
@@ -42,7 +48,7 @@ public class OutputNodeExecutor implements NodeExecutor{
             String to = "jbisht526@gmail.com";
             String subject = "Automated Report";
 
-            emailService.sendEmail(to, subject, input);
+            emailService.sendEmail(workflowOwner, to, subject, input);
             //throw new RuntimeException("testing failure handling");
 
              return "Sent via Email";
@@ -97,7 +103,7 @@ public class OutputNodeExecutor implements NodeExecutor{
                         String to = (String) config.getOrDefault("to", "jbisht526@gmail.com");
                         String subject = "Automated Report";
 
-                        emailService.sendEmail(to, subject, output);
+                        emailService.sendEmail(workflowOwner, to, subject, output);
 
                         System.out.println("Fallback -> Email sent to: " + to);
                         return "Fallback -> Sent via Email";
@@ -112,7 +118,7 @@ public class OutputNodeExecutor implements NodeExecutor{
                         String to = (String) config.getOrDefault("to", "jbisht526@gmail.com");
                         String subject = "Automated Report";
 
-                        emailService.sendEmail(to, subject, output);
+                        emailService.sendEmail(workflowOwner, to, subject, output);
                         System.out.println("Email sent to: " + to);
 
                         return "Sent via Email";
