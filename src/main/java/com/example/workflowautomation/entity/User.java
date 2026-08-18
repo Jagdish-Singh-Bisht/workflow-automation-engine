@@ -43,5 +43,8 @@ public class User {
 
     private LocalDateTime createdAt;
 
+    @Column(unique = true)
+    private String whatsappNumber;
+
 
 }

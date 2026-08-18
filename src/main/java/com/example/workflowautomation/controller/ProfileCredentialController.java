@@ -2,8 +2,10 @@ package com.example.workflowautomation.controller;
 
 
 
-
+import com.example.workflowautomation.entity.User;
+import com.example.workflowautomation.service.WorkflowService;
 import com.example.workflowautomation.entity.UserCredential;
+import com.example.workflowautomation.repository.UserRepository;
 import com.example.workflowautomation.service.UserCredentialService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +26,8 @@ import java.util.List;
 public class ProfileCredentialController {
 
     private final UserCredentialService userCredentialService;
+    private final UserRepository userRepository;
+    private final WorkflowService workflowService;
 
     @GetMapping
     public String credentials(Model model) {
@@ -164,7 +168,14 @@ public class ProfileCredentialController {
     public String saveWhatsapp(
             @RequestParam String accountSid,
             @RequestParam String authToken,
+            @RequestParam String whatsappNumber,
             RedirectAttributes redirectAttributes) {
+
+        User currentUser = workflowService.getCurrentUser();
+
+        currentUser.setWhatsappNumber(whatsappNumber);
+        userRepository.save(currentUser);
+
 
         userCredentialService.saveCredential(
                 "TWILIO",

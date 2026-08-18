@@ -40,7 +40,10 @@ public class OutputNodeExecutor implements NodeExecutor{
 
         // PRIORITY: USER SELECTION
         if(Boolean.TRUE.equals(whatsappEnabled)) {
-            whatsAppService.sendWhatsapp(input);
+            System.out.println(input);
+            whatsAppService.sendWhatsapp(workflowOwner,
+                    "whatsapp:" + workflowOwner.getWhatsappNumber(),
+                    input);
             return "Sent via WhatsApp";
         }
 
@@ -94,7 +97,9 @@ public class OutputNodeExecutor implements NodeExecutor{
 
                     if(whatsappEnabled == null || Boolean.TRUE.equals(whatsappEnabled)) {
 
-                        whatsAppService.sendWhatsapp(output);
+                        whatsAppService.sendWhatsapp(workflowOwner,
+                                "whatsapp:" + workflowOwner.getWhatsappNumber(),
+                                output);
                         return "Sent via WhatsApp";
 
                     } else if (Boolean.TRUE.equals(emailEnabled)) {

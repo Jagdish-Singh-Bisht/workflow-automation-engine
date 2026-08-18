@@ -14,4 +14,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<User> findAllByOrderByCreatedAtDesc();
 
     long countByRole(String role);
+
+    Optional<User> findByWhatsappNumber(String whatsappNumber);
+    
 }
