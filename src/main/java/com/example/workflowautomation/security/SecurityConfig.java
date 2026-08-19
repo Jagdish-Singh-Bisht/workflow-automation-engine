@@ -36,7 +36,9 @@ public class SecurityConfig {
                                 "/css/**",
                                 "/js/**",
                                 "/images/**",
-                                "/webhook/**")
+                                "/webhook/**",
+                                "/error"
+                        )
                         .permitAll()
                         .anyRequest()
                         .authenticated()
