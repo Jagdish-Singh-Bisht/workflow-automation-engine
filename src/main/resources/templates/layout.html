@@ -49,6 +49,16 @@
                 </a>
             </li>
 
+            <li class="nav-item"
+                th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
+
+                <a class="nav-link text-white"
+                   th:href="@{/admin/users}">
+                    Admin Users
+                </a>
+
+            </li>
+
             <hr>
 
             <li class="nav-item">
