@@ -241,6 +241,8 @@ public class PageController {
                                 WorkflowTrigger.builder()
                                         .workflowId(id)
                                         .triggerType("CRON")
+                                        .emailEnabled(false)
+                                        .whatsappEnabled(false)
                                         .build()
                         );
 

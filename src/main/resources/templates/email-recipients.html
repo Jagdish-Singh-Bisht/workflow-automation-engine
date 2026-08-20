@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Executions</title>
+</head>
+
+<body>
+
+    <div th:fragment="content">
+
+        <h2>Manage Email Recipients</h2>
+
+        <hr>
+
+        <h4>Add Recipient</h4>
+
+        <form th:action="@{/recipients}" method="post">
+
+            <div class="mb-3">
+                <label>Name</label>
+                <input type="text"
+                       name="name"
+                       class="form-control"
+                       required>
+
+            </div>
+
+            <div class="mb-3">
+                <label>Email</label>
+                <input type="email"
+                       name="email"
+                       class="form-control"
+                       required
+                       autocomplete="off">
+
+            </div>
+
+            <button type="submit"
+                    class="btn btn-primary">
+                Add Recipient
+            </button>
+
+        </form>
+
+        <hr>
+
+        <h4>Your Recipients</h4>
+
+        <table class="table table-bordered">
+
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+
+            <tbody>
+
+            <tr th:each="recipient : ${recipients}">
+
+                <td th:text="${recipient.name}"></td>
+
+                <td th:text="${recipient.email}"></td>
+
+                <td>
+                    <span th:if="${recipient.active}">
+                        Active
+                    </span>
+
+                    <span th:unless="${recipient.active}">
+                        Inactive
+                    </span>
+
+                </td>
+
+                <td>
+
+                    <form th:action="@{'/recipients/' + ${recipient.id} + '/active'}"
+                          method="post"
+                          style="display:inline">
+
+                        <input type="hidden"
+                               name="active"
+                               th:value="${!recipient.active}">
+
+                        <button type="submit"
+                                class="btn btn-sm btn-secondary">
+
+                            <span th:if="${recipient.active}">
+                                Disable
+                            </span>
+
+                            <span th:unless="${recipient.active}">
+                                Enable
+                            </span>
+
+                        </button>
+
+                    </form>
+
+
+                    <form th:action="@{'/recipients/' + ${recipient.id} + '/delete'}"
+                          method="post"
+                          style="display:inline">
+
+                        <button type="submit"
+                                class="btn btn-sm btn-danger">
+                            Delete
+                        </button>
+
+                    </form>
+
+                </td>
+
+            </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</body>
+
+</html>

@@ -53,8 +53,8 @@ public class TriggerSchedulerService {
                 request.setTaskId(1L);  // TEMP: fixed task
                 request.setEmail("jbisht526@gmail.com");
 
-                request.setEmailEnabled(trigger.getEmailEnabled());
-                request.setWhatsappEnabled(trigger.getWhatsappEnabled());
+                request.setEmailEnabled(trigger.isEmailEnabled());
+                request.setWhatsappEnabled(trigger.isWhatsappEnabled());
 
                 workflowEngine.runWorkflow(request);
 

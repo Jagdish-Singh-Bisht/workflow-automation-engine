@@ -40,11 +40,11 @@ public class WorkflowTrigger {
     @Column(name = "is_active")
     private boolean isActive;
 
-    @Column(name = "email_enabled")
-    private Boolean emailEnabled;
+    @Column(name = "email_enabled", nullable = false)
+    private boolean emailEnabled;
 
-    @Column(name = "whatsapp_enabled")
-    private Boolean whatsappEnabled;
+    @Column(name = "whatsapp_enabled", nullable = false)
+    private boolean whatsappEnabled;
 
 
 }

@@ -1,17 +1,19 @@
 package com.example.workflowautomation.engine;
 
 
-
+import com.example.workflowautomation.entity.EmailRecipient;
+import com.example.workflowautomation.service.EmailRecipientService;
 import com.example.workflowautomation.entity.User;
 import com.example.workflowautomation.entity.WorkflowNode;
 import com.example.workflowautomation.service.EmailService;
 import com.example.workflowautomation.service.WhatsAppService;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.Map;
-
+import java.util.List;
 
 
 @Component("OUTPUT")
@@ -21,6 +23,7 @@ public class OutputNodeExecutor implements NodeExecutor{
     private final ObjectMapper objectMapper;
     private final EmailService emailService;
     private final WhatsAppService whatsAppService;
+    private final EmailRecipientService emailRecipientService;
 
 
 
@@ -48,10 +51,29 @@ public class OutputNodeExecutor implements NodeExecutor{
         }
 
         if(Boolean.TRUE.equals(emailEnabled)) {
-            String to = "jbisht526@gmail.com";
+//            String to = "jbisht526@gmail.com";
+            List<EmailRecipient> recipients =
+                    emailRecipientService.getCurrentUserActiveRecipients();
+
+            if(recipients.isEmpty()) {
+                throw new RuntimeException("No active email recipients configured");
+
+            }
+
             String subject = "Automated Report";
 
-            emailService.sendEmail(workflowOwner, to, subject, input);
+            for(EmailRecipient recipient : recipients) {
+
+                emailService.sendEmail(
+                        workflowOwner,
+                        recipient.getEmail(),
+                        subject,
+                        input
+                );
+
+                System.out.println("Email sent to: " + recipient.getEmail());
+
+            }
             //throw new RuntimeException("testing failure handling");
 
              return "Sent via Email";
@@ -60,6 +82,7 @@ public class OutputNodeExecutor implements NodeExecutor{
 
 
         try {
+
             if(node.getConfigJson() != null) {
 
                 Map<String, Object> config =
@@ -97,34 +120,79 @@ public class OutputNodeExecutor implements NodeExecutor{
 
                     if(whatsappEnabled == null || Boolean.TRUE.equals(whatsappEnabled)) {
 
-                        whatsAppService.sendWhatsapp(workflowOwner,
+                        whatsAppService.sendWhatsapp(
+                                workflowOwner,
                                 "whatsapp:" + workflowOwner.getWhatsappNumber(),
-                                output);
+                                output
+                        );
+
                         return "Sent via WhatsApp";
 
                     } else if (Boolean.TRUE.equals(emailEnabled)) {
 
                         // Fallback to email if WhatsApp is disabled
-                        String to = (String) config.getOrDefault("to", "jbisht526@gmail.com");
-                        String subject = "Automated Report";
 
-                        emailService.sendEmail(workflowOwner, to, subject, output);
+//                        String to = (String) config.getOrDefault("to", "jbisht526@gmail.com");
 
-                        System.out.println("Fallback -> Email sent to: " + to);
+                        List<EmailRecipient> recipients =
+                                emailRecipientService.getCurrentUserActiveRecipients();
+
+                        if(recipients.isEmpty()) {
+                            throw new RuntimeException("No active email recipients configured");
+
+                        }
+
+                        String subject = (String) config.getOrDefault(
+                                "subject",
+                                "Automated Report"
+                        );
+
+                        for(EmailRecipient recipient : recipients) {
+
+                            emailService.sendEmail(
+                                    workflowOwner,
+                                    recipient.getEmail(),
+                                    subject,
+                                    output
+                            );
+
+                            System.out.println("Fallback -> Email sent to: " + recipient.getEmail());
+
+                        }
+
                         return "Fallback -> Sent via Email";
-
                     }
-
 
                 } else if ("EMAIL".equalsIgnoreCase(finalType)) {
 
                     if(emailEnabled == null || Boolean.TRUE.equals(emailEnabled)) {
 
-                        String to = (String) config.getOrDefault("to", "jbisht526@gmail.com");
-                        String subject = "Automated Report";
+                        List<EmailRecipient> recipients =
+                                emailRecipientService.getCurrentUserActiveRecipients();
 
-                        emailService.sendEmail(workflowOwner, to, subject, output);
-                        System.out.println("Email sent to: " + to);
+                        if (recipients.isEmpty()) {
+                            throw new RuntimeException(
+                                    "No active email recipients configured"
+                            );
+                        }
+
+                        String subject = (String) config.getOrDefault(
+                                "subject",
+                                "Automated Report"
+                        );
+
+                        for (EmailRecipient recipient : recipients) {
+
+                            emailService.sendEmail(
+                                    workflowOwner,
+                                    recipient.getEmail(),
+                                    subject,
+                                    output
+                            );
+
+                            System.out.println("Email sent to: " + recipient.getEmail());
+
+                        }
 
                         return "Sent via Email";
                     }
