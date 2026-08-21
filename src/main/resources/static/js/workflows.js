@@ -33,6 +33,7 @@ function runWorkflow(workflowId, buttonElement) {
 
         if (!input || input.trim() === "") {
             showModal("Please enter input before running workflow.");
+            isWorkflowRunning = false;
             return;
         }
 
@@ -41,6 +42,7 @@ function runWorkflow(workflowId, buttonElement) {
         input = prompt("Enter input for workflow:");
 
         if (!input || input.trim() === "") {
+            isWorkflowRunning = false;
             return;
         }
     }
@@ -76,8 +78,28 @@ function runWorkflow(workflowId, buttonElement) {
             whatsappEnabled: whatsappEnabled
         })
     })
-        .then(response => response.text())
-        .then(data => {
+        .then(async response => {
+
+            const data = await response.text();
+
+            if (!response.ok) {
+
+                try {
+                    const errorData = JSON.parse(data);
+
+                    showModal(
+                        errorData.error + "\n\n" +
+                        errorData.message
+                    );
+
+                } catch (e) {
+
+                    showModal("Workflow failed:\n\n" + data);
+                }
+
+                throw new Error(data);
+            }
+
             showModal(data);
 
             buttonElement.disabled = false;
@@ -85,13 +107,14 @@ function runWorkflow(workflowId, buttonElement) {
             isWorkflowRunning = false;
         })
         .catch(error => {
-            console.error(error);
-            showModal("Error running workflow");
+
+            console.error("Workflow error:", error);
 
             buttonElement.disabled = false;
             buttonElement.innerText = "Run";
             isWorkflowRunning = false;
         });
+
 }
 
 window.retryExecution = function(executionId, buttonElement) {
