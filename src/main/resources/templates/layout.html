@@ -14,7 +14,13 @@
 
     <!-- Sidebar -->
     <div class="bg-dark text-white p-3"
-         style="width: 250px; height: 100vh;">
+         style="
+            width: 250px;
+            height: 100vh;
+            position: sticky;
+            top: 0;
+            flex-shrink: 0;
+         ">
 
         <h4>Automation</h4>
         <hr>
@@ -65,6 +71,13 @@
                 <a class="nav-link text-white"
                    th:href="@{/profile}">
                     Profile
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link text-white"
+                   th:href="@{/help}">
+                    Help & Getting Started
                 </a>
             </li>
 
@@ -148,6 +161,10 @@
 
         <th:block th:if="${page == 'email-recipients'}">
             <div th:replace="email-recipients :: content"></div>
+        </th:block>
+
+        <th:block th:if="${page == 'help'}">
+            <div th:replace="help :: content"></div>
         </th:block>
 
     </div>
