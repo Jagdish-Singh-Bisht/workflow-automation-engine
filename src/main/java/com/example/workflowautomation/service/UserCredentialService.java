@@ -1,6 +1,7 @@
 package com.example.workflowautomation.service;
 
 
+import com.example.workflowautomation.exception.CredentialNotConfiguredException;
 import com.example.workflowautomation.entity.User;
 import com.example.workflowautomation.entity.UserCredential;
 import com.example.workflowautomation.repository.UserCredentialRepository;
@@ -186,23 +187,40 @@ public class UserCredentialService {
                                 provider,
                                 credentialType
                         )
-                        .orElseThrow(() -> new RuntimeException(
-                                "Credential not configured: "
-                                        + provider
-                                        + " / "
-                                        + credentialType
+                        .orElseThrow(() ->
+                                new CredentialNotConfiguredException(
+                                        getCredentialConfigurationMessage(provider)
                                 )
                         );
 
         return credentialEncryptionService.decrypt(
                 credential.getEncryptedValue()
         );
-
     }
 
+    private String getCredentialConfigurationMessage(String provider) {
 
+        return switch (provider) {
 
+            case "GEMINI" ->
+                    "Gemini is not configured. "
+                            + "Go to Profile → Connected Services → Gemini "
+                            + "and configure your Gemini API key.";
 
+            case "EMAIL" ->
+                    "Email service is not configured. "
+                            + "Go to Profile → Connected Services → Email "
+                            + "and configure your email address and app password.";
 
+            case "TWILIO" ->
+                    "WhatsApp service is not configured. "
+                            + "Go to Profile → Connected Services → WhatsApp "
+                            + "and configure your Twilio credentials and WhatsApp number.";
+
+            default ->
+                    "Required service credentials are not configured. "
+                            + "Please check Profile → Connected Services.";
+        };
+    }
 
 }
