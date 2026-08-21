@@ -1,7 +1,6 @@
 package com.example.workflowautomation.controller;
 
 
-import com.example.workflowautomation.repository.UserRepository;
 import com.example.workflowautomation.service.AdminService;
 
 import org.springframework.stereotype.Controller;
@@ -21,8 +20,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AdminController {
 
-//    private final UserRepository userRepository;
-
     private final AdminService adminService;
 
 
@@ -35,7 +32,6 @@ public class AdminController {
         model.addAttribute("page", "admin-users");
 
         return "layout";
-
     }
 
     @GetMapping("/users/delete/{id}")

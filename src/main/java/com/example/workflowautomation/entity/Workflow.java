@@ -38,7 +38,6 @@ public class Workflow {
     @Column(nullable = false)
     private String name;
 
-    // Many workflows belong to one user
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "created_by", nullable = false)
     private User user;

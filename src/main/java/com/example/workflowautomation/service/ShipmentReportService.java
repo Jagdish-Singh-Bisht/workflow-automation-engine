@@ -21,7 +21,6 @@ public class ShipmentReportService {
 
     public String generateReport() {
 
-        // Last 24hrs data
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime last24Hours = now.minusHours(24);
 
@@ -29,13 +28,11 @@ public class ShipmentReportService {
                 shipmentRepository.findByLastUpdatedAfter(last24Hours);
 
 
-        // handle no data case
         if(recent.isEmpty()) {
             return "Subject: Shipment Report\n\nNo shipment updates in the last 24 hours.";
         }
 
 
-        // Counts
         long totalUpdated = recent.size();
 
         long delivered = recent.stream()
@@ -47,19 +44,16 @@ public class ShipmentReportService {
                 .count();
 
 
-        // High Priority Pending
         List<Shipment> highPriority = recent.stream()
                 .filter(s -> "PENDING".equalsIgnoreCase(s.getStatus()))
                 .filter(s -> "HIGH".equalsIgnoreCase(s.getPriority()))
                 .toList();
 
-        // Total Quantity
         int totalQuantity = recent.stream()
                 .mapToInt(Shipment::getQuantity)
                 .sum();
 
 
-        // Build Report
         StringBuilder report = new StringBuilder();
 
         report.append("Subject: Shipment Report (Last 24 Hours)\n\n");
@@ -92,7 +86,6 @@ public class ShipmentReportService {
                 .append(totalQuantity)
                 .append(" units\n\n");
 
-        // Dynamic Message
         if(pending == 0) {
             report.append("All shipments delivered successfully.\n\n");
         } else {

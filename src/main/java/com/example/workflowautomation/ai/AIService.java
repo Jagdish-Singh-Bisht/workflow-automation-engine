@@ -1,8 +1,6 @@
 package com.example.workflowautomation.ai;
 
-
 import com.example.workflowautomation.entity.User;
-
 
 public interface AIService {
 

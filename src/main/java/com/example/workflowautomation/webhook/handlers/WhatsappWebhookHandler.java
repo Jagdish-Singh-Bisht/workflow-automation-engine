@@ -44,8 +44,6 @@ public class WhatsappWebhookHandler implements WebhookHandler {
                 .orElseThrow(() -> new RuntimeException("User not found: " + userId)
                 );
 
-//        String from = data.get("from");
-
         String message = data.get("Body");
 
         String whatsappNumber = data.get("whatsappNumber");
@@ -70,12 +68,9 @@ public class WhatsappWebhookHandler implements WebhookHandler {
             reply = calendarService.getTodayEvents();
 
         } else if("GET_TOMORROW_SCHEDULE".equals(intent)) {
-            // reply = calendarService.getTomorrowEvents();
             reply = "feature not implemented yet";
 
         } else {
-            // Gemini AI fallback
-//            reply = aiService.generateResponse(message);
             reply = "AI response through WhatsApp is temporarily unavailable.";
         }
 

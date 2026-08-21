@@ -11,7 +11,6 @@ import java.util.List;
 
 public interface WorkflowRepository extends JpaRepository<Workflow, Long> {
 
-    // Find all workflows created by a specific user;
     List<Workflow> findByUser(User user);
 
     boolean existsByUser(User user);

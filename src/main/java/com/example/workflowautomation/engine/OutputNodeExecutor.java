@@ -32,8 +32,6 @@ public class OutputNodeExecutor implements NodeExecutor{
 
         User workflowOwner = (User) context.get("user");
 
-
-
         Boolean emailEnabled = (Boolean)
                 context.get("emailEnabled");
 
@@ -41,7 +39,6 @@ public class OutputNodeExecutor implements NodeExecutor{
                 context.get("whatsappEnabled");
 
 
-        // PRIORITY: USER SELECTION
         if(Boolean.TRUE.equals(whatsappEnabled)) {
             System.out.println(input);
             whatsAppService.sendWhatsapp(workflowOwner,
@@ -51,7 +48,7 @@ public class OutputNodeExecutor implements NodeExecutor{
         }
 
         if(Boolean.TRUE.equals(emailEnabled)) {
-//            String to = "jbisht526@gmail.com";
+
             List<EmailRecipient> recipients =
                     emailRecipientService.getCurrentUserActiveRecipients();
 
@@ -74,7 +71,6 @@ public class OutputNodeExecutor implements NodeExecutor{
                 System.out.println("Email sent to: " + recipient.getEmail());
 
             }
-            //throw new RuntimeException("testing failure handling");
 
              return "Sent via Email";
         }
@@ -129,10 +125,6 @@ public class OutputNodeExecutor implements NodeExecutor{
                         return "Sent via WhatsApp";
 
                     } else if (Boolean.TRUE.equals(emailEnabled)) {
-
-                        // Fallback to email if WhatsApp is disabled
-
-//                        String to = (String) config.getOrDefault("to", "jbisht526@gmail.com");
 
                         List<EmailRecipient> recipients =
                                 emailRecipientService.getCurrentUserActiveRecipients();

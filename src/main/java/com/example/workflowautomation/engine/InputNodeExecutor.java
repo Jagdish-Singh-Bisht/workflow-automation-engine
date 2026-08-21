@@ -12,7 +12,6 @@ import java.util.Map;
 
 
 
-
 @Component("INPUT")
 @RequiredArgsConstructor
 public class InputNodeExecutor implements NodeExecutor {
@@ -32,25 +31,12 @@ public class InputNodeExecutor implements NodeExecutor {
 
                 String type = (String) config.get("type");
 
-                // Controlled extension (NOT generic yet)
-//                if("DB_FETCH_SHIPMENT".equalsIgnoreCase(type)) {
-//
-//                    var last12Hours = java.time.LocalDateTime.now().minusHours(12);
-//
-//                    var shipments = shipmentRepository.findByLastUpdatedAfter(last12Hours);
-//
-//                    context.put("data", shipments);
-//                    context.put("dataType", "shipment");
-//
-//                    return "Fetched " + shipments.size() + " shipments";
-
-                // Dynamic handler selection
                 SourceHandler handler = sourceHandler.get(type);
 
                 if(handler != null) {
                     handler.fetch(context);
-                    // return "Data fetched using: " + type;
-                    return (String) context.get("data"); // pass fetched data as output
+
+                    return (String) context.get("data");
                 }
             }
         } catch (Exception e) {
@@ -58,6 +44,6 @@ public class InputNodeExecutor implements NodeExecutor {
         }
 
 
-        return input; // just pass through
+        return input;
     }
 }

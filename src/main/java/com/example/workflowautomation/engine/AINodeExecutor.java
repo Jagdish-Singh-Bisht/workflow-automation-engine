@@ -16,8 +16,6 @@ import java.util.List;
 
 
 
-
-
 @Component("AI")
 @RequiredArgsConstructor
 public class AINodeExecutor implements NodeExecutor {
@@ -29,19 +27,18 @@ public class AINodeExecutor implements NodeExecutor {
 
         User workflowOwner = (User) context.get("user");
 
-        // 1. Get data (generic)
         Object dataObj = context.get("data");
         String data = (dataObj != null) ? dataObj.toString() : input;
 
         String type = (String) context.get("dataType");
 
-        // 2. Shipment (keep as-is)
+
         if ("shipment".equalsIgnoreCase(type) && dataObj instanceof List<?>) {
             List<Shipment> shipments = (List<Shipment>) dataObj;
             return ShipmentProcessor.generateSummary(shipments);
         }
 
-        // 3. Read prompt from configJson
+
         String promptInstruction = "";
 
         try {
@@ -59,12 +56,12 @@ public class AINodeExecutor implements NodeExecutor {
             System.out.println("Invalid config JSON, using default prompt");
         }
 
-        // 4. Default prompt (fallback)
+
         if (promptInstruction == null || promptInstruction.isBlank()) {
             promptInstruction = "Summarize the following content clearly and professionally in under 80 words.";
         }
 
-        // 5. Final prompt (controlled AI)
+
         String finalPrompt = """
             You are an automation AI system.
 
@@ -82,13 +79,16 @@ public class AINodeExecutor implements NodeExecutor {
             %s
             """.formatted(promptInstruction, data);
 
-        // 6. Call AI
+
         try {
-//            System.out.println(finalPrompt);
+
             return aiService.generateResponse(finalPrompt, workflowOwner);
+
         } catch (Exception e) {
             e.printStackTrace();
-            return data; // fallback
+
+            return data;
+
         }
     }
 }

@@ -18,7 +18,6 @@ import com.example.workflowautomation.repository.WorkflowNodeRepository;
 import com.example.workflowautomation.repository.ExecutionLogRepository;
 import com.example.workflowautomation.repository.NodeExecutionLogRepository;
 
-//import jakarta.transaction.Transactional;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -28,7 +27,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.security.core.Authentication;
-//import org.springframework.security.core.context.SecurityContextHolder;
 import com.example.workflowautomation.security.CustomUserDetails;
 
 
@@ -54,7 +52,6 @@ public class WorkflowService {
         return userDetails.getUser();
     }
 
-    // Create Workflow
     public Workflow createWorkflow(String workflowName) {
 
         Authentication authentication = SecurityContextHolder
@@ -70,9 +67,6 @@ public class WorkflowService {
                 .createdAt(LocalDateTime.now())
                 .build();
 
-        // return workflowRepository.save(workflow);
-
-        // replace by this
         Workflow savedWorkflow = workflowRepository.save(workflow);
 
         addNode(savedWorkflow.getId(), "INPUT", 1, null);
@@ -112,7 +106,6 @@ public class WorkflowService {
 
     }
 
-
     public List<Workflow> getCurrentUserWorkflows() {
 
         User currentUser = getCurrentUser();
@@ -124,7 +117,6 @@ public class WorkflowService {
         return getCurrentUserWorkflows().size();
     }
 
-    // Add Node to Workflow
     public WorkflowNode addNode(Long workflowId,
                                 String nodeType,
                                 Integer sequenceOrder,
@@ -142,9 +134,6 @@ public class WorkflowService {
         return workflowNodeRepository.save(node);
     }
 
-
-
-    // Get Nodes in Execution Order
     public List<WorkflowNode> getOrderedNodes(Long workflowId) {
 
         Workflow workflow = getWorkflowForCurrentUser(workflowId);
@@ -152,9 +141,6 @@ public class WorkflowService {
         return workflowNodeRepository
                 .findByWorkflowOrderBySequenceOrderAsc(workflow);
     }
-
-
-
 
     public List<ExecutionLogResponse> getExecutionHistory(Long workflowId) {
 
@@ -241,7 +227,6 @@ public class WorkflowService {
         return workflowTriggerRepository.countByWorkflowIdInAndIsActive(workflowIds, true);
     }
 
-    // Execution Log History
     public List<ExecutionLog> getCurrentUserExecutionHistory() {
 
         return executionLogRepository.findTop20ByWorkflowUserOrderByExecutedAtDesc(getCurrentUser());
@@ -286,25 +271,19 @@ public class WorkflowService {
 
         Long workflowId = workflow.getId();
 
-        // 1. Get all execution logs of this workflow
         List<ExecutionLog> executionLogs =
                 executionLogRepository.findByWorkflowIdOrderByExecutedAtDesc(workflowId);
 
-        // 2. Delete node execution logs first
         for(ExecutionLog executionLog : executionLogs) {
             nodeExecutionLogRepository.deleteByExecutionLogId(executionLog.getId());
         }
 
-        // 3. Delete execution logs
         executionLogRepository.deleteByWorkflowId(workflowId);
 
-        // 4. Delete workflow nodes
         workflowNodeRepository.deleteByWorkflow(workflow);
 
-        // 5. Delete workflow trigger
         workflowTriggerRepository.deleteByWorkflowId(workflowId);
 
-        // 6. Delete workflow
         workflowRepository.delete(workflow);
 
     }

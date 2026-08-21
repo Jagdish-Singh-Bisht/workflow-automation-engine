@@ -11,7 +11,6 @@ import java.util.List;
 
 public interface WorkflowNodeRepository extends JpaRepository<WorkflowNode, Long> {
 
-    // Get all nodes for a workflow ordered by execution sequence
     List<WorkflowNode> findByWorkflowOrderBySequenceOrderAsc(Workflow workflow);
 
     void deleteByWorkflow(Workflow workflow);

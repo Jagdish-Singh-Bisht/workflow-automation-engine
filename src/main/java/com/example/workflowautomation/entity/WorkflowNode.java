@@ -41,12 +41,12 @@ public class WorkflowNode {
     private Workflow workflow;
 
     @Column(nullable = false)
-    private String nodeType; // INPUT - AI/OUTPUT
+    private String nodeType;
 
     @Column(nullable = false)
     private Integer sequenceOrder;
 
     @Column(columnDefinition = "TEXT")
-    private String configJson; // Store node-specific configuration as JSON - (FUTURE configuration)
+    private String configJson;
 
 }

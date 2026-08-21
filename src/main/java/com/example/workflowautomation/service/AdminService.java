@@ -27,21 +27,6 @@ public class AdminService {
         return userRepository.findAllByOrderByCreatedAtDesc();
     }
 
-    /*
-    Delete Request
-    Does user exist?
-    Is it the current user?
-    Is this the last ADMIN?
-     */
-
-
-//    private void validateWorkflowOwnership(User user) {
-//
-//        if(workflowRepository.existsByUser(user)) {
-//            throw new RuntimeException("Cannot delete user because they own workflow. \n Transfer or delete their workflows first.");
-//        }
-//    }
-
     @Transactional
     public void deleteUser(Long id){
 
@@ -63,9 +48,6 @@ public class AdminService {
                 throw new RuntimeException("Cannot delete the last admin");
             }
         }
-
-//        validateWorkflowOwnership(user);
-//        userRepository.delete(user);
 
         List<Workflow> workflows = workflowRepository.findByUser(user);
 

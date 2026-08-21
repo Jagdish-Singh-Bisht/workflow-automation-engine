@@ -38,7 +38,7 @@ public class CalendarService {
     public String getTodayEvents() {
         try {
 
-            // 🔹 Setup Google API
+            // Setup Google API
             var httpTransport = GoogleNetHttpTransport.newTrustedTransport();
             var jsonFactory = JacksonFactory.getDefaultInstance();
 
@@ -67,7 +67,7 @@ public class CalendarService {
                     credential
             ).setApplicationName("Workflow").build();
 
-            // 🔹 Today time range
+            // Today time range
             var todayStart = java.time.LocalDate.now()
                     .atStartOfDay(ZoneId.systemDefault());
 
@@ -117,7 +117,7 @@ public class CalendarService {
                 String startTime = formatter.format(startInstant);
                 String endTime = formatter.format(endInstant);
 
-                // 🔹 Links
+                // Links
                 String link = e.getHtmlLink();
                 String meetLink = e.getHangoutLink();
 
@@ -134,7 +134,7 @@ public class CalendarService {
                     }
                 }
 
-                // 🔹 Output formatting
+                // Output formatting
                 res.append(count++).append(". ").append(summary).append("\n")
                         .append("   ⏰ ").append(startTime).append(" - ").append(endTime).append("\n");
 
@@ -151,7 +151,7 @@ public class CalendarService {
                 res.append("\n");
             }
 
-            // 🔹 If all events filtered out
+            // If all events filtered out
             if (count == 1) {
                 return "No valid events today";
             }

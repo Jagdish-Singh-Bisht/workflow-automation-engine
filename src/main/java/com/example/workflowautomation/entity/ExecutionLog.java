@@ -36,7 +36,6 @@ public class ExecutionLog {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Many logs belong to one workflow
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "workflow_id", nullable = false)
     private Workflow workflow;
@@ -47,7 +46,7 @@ public class ExecutionLog {
     @Column(columnDefinition = "TEXT")
     private String outputData;
 
-    private String status; // SUCCESS / FAILURE
+    private String status;
 
     private LocalDateTime executedAt;
 

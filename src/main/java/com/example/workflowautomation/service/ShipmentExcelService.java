@@ -18,8 +18,6 @@ public class ShipmentExcelService {
 
         try (Workbook workbook = new XSSFWorkbook()) {
 
-
-            // Sheet 1: Fresh Updates
             Sheet sheet = workbook.createSheet("Fresh Updates");
 
             createHeader(sheet);
@@ -30,22 +28,6 @@ public class ShipmentExcelService {
                 fillRow(row, s);
             }
 
-            // Sheet 2: Pending
-//            Sheet pendingSheet = workbook.createSheet("Pending Shipments");
-//
-//            createHeader(pendingSheet);
-//
-//            int pendingRowNum = 1;
-//            for (Shipment s : allShipments) {
-//
-//                if (!"DELIVERED".equalsIgnoreCase(s.getStatus())) {
-//
-//                    Row row = pendingSheet.createRow(pendingRowNum++);
-//                    fillRow(row, s);
-//                }
-//            }
-
-            // Auto size columns
             for (int i = 0; i < 6; i++) {
                 sheet.autoSizeColumn(i);
             }
@@ -60,7 +42,6 @@ public class ShipmentExcelService {
         }
     }
 
-    // Common Header
     private void createHeader(Sheet sheet) {
         Row header = sheet.createRow(0);
 
@@ -72,7 +53,6 @@ public class ShipmentExcelService {
         header.createCell(5).setCellValue("Last Updated");
     }
 
-    // Fill Row
     private void fillRow(Row row, Shipment s) {
         row.createCell(0).setCellValue(s.getShipmentId());
         row.createCell(1).setCellValue(s.getClientName());

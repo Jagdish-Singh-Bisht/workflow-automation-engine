@@ -5,10 +5,8 @@ package com.example.workflowautomation.ai;
 import com.example.workflowautomation.entity.User;
 import com.example.workflowautomation.service.UserCredentialService;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpEntity;
 
@@ -21,15 +19,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class GeminiAIService implements AIService {
 
-
     private final UserCredentialService userCredentialService;
 
-
-//    @Value("${gemini.api.key}")
-//    private String apiKey;
-
     private final RestTemplate restTemplate = new RestTemplate();
-
 
     @Override
     public String generateResponse(String input, User user) {
@@ -59,21 +51,17 @@ public class GeminiAIService implements AIService {
         HttpEntity<Map<String, Object>> entity =
                 new HttpEntity<>(request, headers);
 
-
-
         Map response = restTemplate.postForObject(url, entity, Map.class);
 
         if(response == null) {
             throw new RuntimeException("AI response is null");
         }
 
-
         List candidates = (List) response.get("candidates");
 
         if(candidates == null || candidates.isEmpty()) {
             throw new RuntimeException("No candidates in AI response: " + response);
         }
-
 
         Map firstCandidate = (Map) candidates.get(0);
 
@@ -83,13 +71,11 @@ public class GeminiAIService implements AIService {
             throw new RuntimeException("Content is null: " + response);
         }
 
-
         List parts = (List) content.get("parts");
 
         if(parts == null || parts.isEmpty()) {
             throw new RuntimeException("Parts are null/empty: " + response);
         }
-
 
         Map part = (Map) parts.get(0);
         String text = (String) part.get("text");
@@ -100,7 +86,6 @@ public class GeminiAIService implements AIService {
 
         return text;
     }
-
 
     @Override
     public String detectIntent(String input) {

@@ -47,7 +47,6 @@ public class WorkflowController {
     private final WorkflowTriggerRepository workflowTriggerRepository;
 
 
-    // Create Workflow
     @PostMapping("/create")
     public Workflow createWorkflow(
             @RequestParam String workflowName) {
@@ -55,8 +54,6 @@ public class WorkflowController {
         return workflowService.createWorkflow(workflowName);
     }
 
-
-    // Add Node
     @PostMapping("/{workflowId}/nodes")
     public WorkflowNode addNode(
             @PathVariable Long workflowId,
@@ -66,21 +63,6 @@ public class WorkflowController {
 
         return workflowService.addNode(workflowId, nodeType, sequenceOrder, configJson);
     }
-
-
-    /*
-    // Run Workflow
-    @PostMapping("/{workflowId}/run")
-    public String runWorkflow(
-            @PathVariable Long workflowId,
-            @RequestParam String input) {
-
-        return workflowEngine.runWorkflow(workflowId, input);
-    }
-
-
-     */
-
 
     @PostMapping("/{workflowId}/run")
     public String runWorkflow(
@@ -92,18 +74,15 @@ public class WorkflowController {
         return workflowEngine.runWorkflow(request);
     }
 
-
     @GetMapping("/{workflowId}/executions")
     public List<ExecutionLogResponse> getExecutionHistory(@PathVariable Long workflowId) {
         return workflowService.getExecutionHistory(workflowId);
     }
 
-
     @GetMapping("/{workflowId}/node/executions")
     public List<NodeExecutionLogResponse> getNodeExecutionHistory(@PathVariable Long workflowId) {
         return workflowService.getNodeExecutionHistory(workflowId);
     }
-
 
     @PostMapping("/run")
     public String runWorkflow(@RequestBody WorkflowRunRequest request) {
@@ -111,8 +90,6 @@ public class WorkflowController {
         return workflowEngine.runWorkflow(request);
     }
 
-
-    // Retry Execution
     @PostMapping("/executions/{id}/retry")
     public ResponseEntity<String> retryExecution(@PathVariable Long id) {
 
@@ -134,8 +111,6 @@ public class WorkflowController {
 
     }
 
-
-    // Toggle Trigger
     @PostMapping("/workflows/{id}/toggle-trigger")
     public ResponseEntity<String> toggleTrigger(@PathVariable Long id) {
 
@@ -151,8 +126,6 @@ public class WorkflowController {
 
         return ResponseEntity.ok(status);
     }
-
-
 
 }
 

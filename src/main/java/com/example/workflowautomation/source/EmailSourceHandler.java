@@ -46,16 +46,6 @@ public class EmailSourceHandler implements SourceHandler {
     @Value("${mail.imap.port}")
     private String port;
 
-    /*
-
-    @Value("${MAIL_USERNAME}")
-    private String username;
-
-    @Value("${MAIL_APP_PASSWORD}")
-    private String password;
-
-     */
-
     @Override
     public void fetch(Map<String, Object> context) {
 
@@ -102,7 +92,6 @@ public class EmailSourceHandler implements SourceHandler {
 
                 // Get unique message ID (using header)
                 String[] headers = message.getHeader("Message-ID");
-                // String messageId = (headers != null && headers.length > 0) ? headers[0] : null;
 
                 String messageId = null;
                 if(headers != null) {

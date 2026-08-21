@@ -42,18 +42,10 @@ public class ReportEmailService {
         LocalDateTime last24Hours =
                 LocalDateTime.now().minusHours(24);
 
-        // 1) Fetch filtered data
         List<Shipment> fresh =
                 shipmentRepository.findByLastUpdatedAfter(last24Hours);
 
-//        List<Shipment> all = shipmentRepository.findAll();
-
-        // 2) Generate text report
         String report = shipmentReportService.generateReport();
-
-
-        // 3) Generate excel
-
 
         byte[] excel = shipmentExcelService.generateExcel(fresh);
 
@@ -61,26 +53,6 @@ public class ReportEmailService {
                 .stream()
                 .map(s -> s.getEmail())
                 .toList();
-
-
-//        // 4) Send email
-//        String subject = "Daily Shipment Report";
-//
-//        for(String email : emails) {
-//            System.out.println("Sending report to: " + email);
-//
-////            emailService.sendEmail(email, subject, report);
-//
-////            emailService.sendEmailWithAttachment(
-////                    email,
-////                    subject,
-////                    report,
-////                    excel
-////            );
-//            return report;
-//        }
-//
-//        return "Report sent to all users!";
 
         return report;
 

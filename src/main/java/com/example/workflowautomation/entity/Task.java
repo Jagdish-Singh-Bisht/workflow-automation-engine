@@ -10,9 +10,6 @@ import jakarta.persistence.GenerationType;
 import java.time.LocalDate;
 
 
-
-
-
 @Entity
 @Table(name = "tasks")
 public class Task {
