@@ -1,6 +1,7 @@
 package com.example.workflowautomation.engine;
 
 
+import com.example.workflowautomation.exception.WorkflowConfigurationException;
 import com.example.workflowautomation.entity.EmailRecipient;
 import com.example.workflowautomation.service.EmailRecipientService;
 import com.example.workflowautomation.entity.User;
@@ -50,10 +51,13 @@ public class OutputNodeExecutor implements NodeExecutor{
         if(Boolean.TRUE.equals(emailEnabled)) {
 
             List<EmailRecipient> recipients =
-                    emailRecipientService.getCurrentUserActiveRecipients();
+                    emailRecipientService.getActiveRecipients(workflowOwner);
 
             if(recipients.isEmpty()) {
-                throw new RuntimeException("No active email recipients configured");
+                throw new WorkflowConfigurationException(
+                        "No active email recipients configured. " +
+                                "Please add and activate at least one email recipient from Profile → Email Recipients."
+                );
 
             }
 
@@ -127,10 +131,13 @@ public class OutputNodeExecutor implements NodeExecutor{
                     } else if (Boolean.TRUE.equals(emailEnabled)) {
 
                         List<EmailRecipient> recipients =
-                                emailRecipientService.getCurrentUserActiveRecipients();
+                                emailRecipientService.getActiveRecipients(workflowOwner);
 
                         if(recipients.isEmpty()) {
-                            throw new RuntimeException("No active email recipients configured");
+                            throw new WorkflowConfigurationException(
+                                    "No active email recipients configured. " +
+                                            "Please add and activate at least one email recipient from Profile → Email Recipients."
+                            );
 
                         }
 
@@ -160,11 +167,12 @@ public class OutputNodeExecutor implements NodeExecutor{
                     if(emailEnabled == null || Boolean.TRUE.equals(emailEnabled)) {
 
                         List<EmailRecipient> recipients =
-                                emailRecipientService.getCurrentUserActiveRecipients();
+                                emailRecipientService.getActiveRecipients(workflowOwner);
 
                         if (recipients.isEmpty()) {
-                            throw new RuntimeException(
-                                    "No active email recipients configured"
+                            throw new WorkflowConfigurationException(
+                                    "No active email recipients configured. " +
+                                            "Please add and activate at least one email recipient from Profile → Email Recipients."
                             );
                         }
 

@@ -106,6 +106,13 @@ public class WorkflowService {
 
     }
 
+    public Workflow getWorkflowById(Long workflowId) {
+
+        return workflowRepository.findByIdWithUser(workflowId)
+                .orElseThrow(() -> new RuntimeException("Workflow not found"));
+
+    }
+
     public List<Workflow> getCurrentUserWorkflows() {
 
         User currentUser = getCurrentUser();

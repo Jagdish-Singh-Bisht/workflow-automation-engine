@@ -34,6 +34,10 @@ public class EmailRecipientService {
         return emailRecipientRepository.findByUserAndActiveTrue(currentUser);
     }
 
+    public List<EmailRecipient> getActiveRecipients(User user) {
+
+        return emailRecipientRepository.findByUserAndActiveTrue(user);
+    }
 
     public EmailRecipient addRecipient(
             String name,

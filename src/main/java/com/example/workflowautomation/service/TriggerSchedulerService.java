@@ -56,7 +56,7 @@ public class TriggerSchedulerService {
                 request.setEmailEnabled(trigger.isEmailEnabled());
                 request.setWhatsappEnabled(trigger.isWhatsappEnabled());
 
-                workflowEngine.runWorkflow(request);
+                workflowEngine.runScheduledWorkflow(request);
 
             }
         }

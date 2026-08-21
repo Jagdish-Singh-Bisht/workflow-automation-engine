@@ -34,12 +34,29 @@ public class WorkflowEngine {
 
     public String runWorkflow(WorkflowRunRequest request) {
 
-        String input = request.getInput();
-
         Workflow workflow =
                 workflowService.getWorkflowForCurrentUser(
                         request.getWorkflowId()
                 );
+
+        return executeWorkflow(request, workflow);
+
+    }
+
+    public String runScheduledWorkflow(WorkflowRunRequest request) {
+
+        Workflow workflow =
+                workflowService.getWorkflowById(
+                        request.getWorkflowId()
+                );
+
+        return executeWorkflow(request, workflow);
+    }
+
+    public String executeWorkflow(WorkflowRunRequest request,
+                                  Workflow workflow ) {
+
+        String input = request.getInput();
 
         String currentData = input;
 
