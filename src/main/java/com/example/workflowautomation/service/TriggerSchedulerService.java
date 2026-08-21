@@ -26,7 +26,7 @@ public class TriggerSchedulerService {
     private final WorkflowTriggerRepository workflowTriggerRepository;
     private final WorkflowEngine workflowEngine;
 
-    @Scheduled(fixedRate = 60000) // runs every seconds
+    @Scheduled(fixedRate = 60000) // checks every minute
     public void checkTriggers() {
 
         List<WorkflowTrigger> triggers =
@@ -49,9 +49,9 @@ public class TriggerSchedulerService {
                 System.out.println("Running workflow by CRON: " + workflowId);
 
                 WorkflowRunRequest request = new WorkflowRunRequest();
+
                 request.setWorkflowId(workflowId);
-                request.setTaskId(1L);  // TEMP: fixed task
-                request.setEmail("jbisht526@gmail.com");
+                request.setInput("Scheduled workflow execution");
 
                 request.setEmailEnabled(trigger.isEmailEnabled());
                 request.setWhatsappEnabled(trigger.isWhatsappEnabled());
