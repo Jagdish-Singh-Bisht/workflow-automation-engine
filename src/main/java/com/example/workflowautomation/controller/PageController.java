@@ -389,4 +389,13 @@ public class PageController {
 
     }
 
+    @GetMapping("/help")
+    public String help(Model model) {
+
+        model.addAttribute("page", "help");
+
+        return "layout";
+
+    }
+
 }
