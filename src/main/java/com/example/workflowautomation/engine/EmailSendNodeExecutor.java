@@ -1,26 +1,34 @@
 package com.example.workflowautomation.engine;
 
-
-
+import com.example.workflowautomation.entity.EmailRecipient;
 import com.example.workflowautomation.entity.User;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.example.workflowautomation.entity.WorkflowNode;
+import com.example.workflowautomation.service.EmailRecipientService;
 import com.example.workflowautomation.service.EmailService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.springframework.stereotype.Component;
 
-import java.util.Map;
 import java.util.List;
-
-
+import java.util.Map;
 
 
 @Component("EMAIL_SEND")
-public class EmailSendNodeExecutor implements NodeExecutor{
+public class EmailSendNodeExecutor implements NodeExecutor {
 
     private final EmailService emailService;
+    private final EmailRecipientService emailRecipientService;
+    private final ObjectMapper objectMapper;
 
-    public EmailSendNodeExecutor(EmailService emailService) {
+
+    public EmailSendNodeExecutor(
+            EmailService emailService,
+            EmailRecipientService emailRecipientService,
+            ObjectMapper objectMapper) {
+
         this.emailService = emailService;
+        this.emailRecipientService = emailRecipientService;
+        this.objectMapper = objectMapper;
     }
 
 
@@ -29,74 +37,76 @@ public class EmailSendNodeExecutor implements NodeExecutor{
                           WorkflowNode node,
                           Map<String, Object> context) {
 
-//        String to = (String) context.get("email");
-//        if (to == null) {
-//            to = "jbisht526@gmail.com";
-//        }
+        User workflowOwner =
+                (User) context.get("user");
 
-        User workflowOwner = (User) context.get("user");
 
-        Object emailsObj = context.get("emails");
+        List<EmailRecipient> recipients =
+                emailRecipientService
+                        .getCurrentUserActiveRecipients();
 
-        List<String> emails;
 
-        if(emailsObj != null) {
-            emails = (List<String>) emailsObj;
-        } else {
-            // fallback (single email)
-            String singleEmail = (String) context.get("email");
-            if(singleEmail == null) {
-                singleEmail = "jbisht526@gmail.com";
-            }
+        if (recipients.isEmpty()) {
 
-            emails = List.of(singleEmail);
+            throw new RuntimeException(
+                    "No active email recipients configured"
+            );
         }
 
 
+        String taskName =
+                (String) context.get("taskName");
 
-        String taskName = (String) context.get("taskName");
-
-        if(taskName == null) {
+        if (taskName == null || taskName.isBlank()) {
             taskName = "Task";
         }
 
-        String subject = taskName + " - Notification";
+        String subject =
+                taskName + " - Notification";
 
 
-        try{
+        try {
 
-            if(node.getConfigJson() != null) {
-                ObjectMapper mapper = new ObjectMapper();
+            if (node.getConfigJson() != null) {
 
                 Map<String, String> config =
-                        mapper.readValue(node.getConfigJson(), Map.class);
+                        objectMapper.readValue(
+                                node.getConfigJson(),
+                                Map.class
+                        );
 
-//                if(config.containsKey("to")) {
-//                    emails = List.of(config.get("to"));
-//                }
+                if (config.containsKey("subject")) {
 
-                if(config.containsKey("subject")) {
-                    subject = config.get("subject");
+                    subject =
+                            config.get("subject");
                 }
             }
-        } catch(Exception e) {
-            throw new RuntimeException("Invalid config_json format", e);
+
+        } catch (Exception e) {
+
+            throw new RuntimeException(
+                    "Invalid config_json format",
+                    e
+            );
         }
 
-        System.out.println("Emails list: " + emails);
 
-        for(String to : emails) {
-            System.out.println("Sending to: " + to);
+        for (EmailRecipient recipient : recipients) {
+
+            System.out.println(
+                    "Sending email to: "
+                            + recipient.getEmail()
+            );
+
             emailService.sendEmail(
                     workflowOwner,
-                    to,
+                    recipient.getEmail(),
                     subject,
-                    input);
+                    input
+            );
         }
 
+
         return "EMAIL SENT SUCCESSFULLY\n\n" + input;
-
     }
-
-
 }
