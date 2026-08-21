@@ -97,16 +97,6 @@ public class PageController {
         return "layout";
     }
 
-
-//    @GetMapping("/workflows")
-//    public String workflows(Model model) {
-//        model.addAttribute("page", "workflows");
-//
-//        model.addAttribute("workflows", workflowService.getAllWorkflows());
-//
-//        return "layout";
-//    }
-
     @GetMapping("/workflows")
     public String workflows(Model model) {
 
@@ -197,23 +187,6 @@ public class PageController {
         return "layout";
     }
 
-
-    /*
-    @PostMapping("/workflows/{id}/nodes")
-    public String workflowNodes(@PathVariable Long id,
-                                @RequestParam String nodeType,
-                                @RequestParam Integer sequenceOrder) {
-
-        workflowService.addNode(id, nodeType, sequenceOrder);
-
-        return "redirect:/workflows/" + id + "/nodes";
-    }
-
-
-     */
-
-
-
     @PostMapping("/workflows/{id}/nodes")
     public String addNode(@PathVariable Long id,
                           @RequestParam String nodeType,
@@ -277,10 +250,6 @@ public class PageController {
     @GetMapping("/workflows/{id}")
     public String workflowDetails(@PathVariable Long id, Model model) {
 
-//        Workflow workflow = workflowRepository.findById(id)
-//                .orElseThrow(() -> new RuntimeException("Workflow not found"));
-
-        // replace with this
         Workflow workflow = workflowService.getWorkflowForCurrentUser(id);
 
         WorkflowTrigger trigger = workflowTriggerRepository.findByWorkflowId(id)
@@ -308,7 +277,6 @@ public class PageController {
         return "layout";
     }
 
-    // ExecutionDetailsPage
 
     @GetMapping("/executions/{id}")
     public String executionDetails(@PathVariable Long id,
@@ -391,13 +359,6 @@ public class PageController {
 
     }
 
-    @GetMapping("/admin-test")
-    @PreAuthorize("hasRole('ADMIN')")  // Only accessible to users with ADMIN role (before executing this method)
-    @ResponseBody
-    public String adminTest() {
-        return "Welcome Admin!";
-    }
-
     @GetMapping("/workflows/{id}/delete")
     public String deleteWorkflow(@PathVariable Long id,
                                  RedirectAttributes redirectAttributes) {
@@ -427,7 +388,5 @@ public class PageController {
         return "redirect:/workflows";
 
     }
-
-
 
 }
